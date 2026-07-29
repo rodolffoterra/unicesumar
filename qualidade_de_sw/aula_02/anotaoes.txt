@@ -1,0 +1,11 @@
+#####################
+Abrir o VS Code 
+#####################
+File 
+	Open File
+		C:\Users\rodolfo\Desktop\cesumar\back_end\Aula 02
+
+
+No Terminal assim que explicar o app_streamlit_usuario.py
+
+	streamlit run .\app_streamlit_usuarios.py

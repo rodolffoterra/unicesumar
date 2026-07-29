@@ -1,0 +1,9 @@
+uvicorn main:app --reload
+
+
+pip install uvicorn
+pip uninstall fastapi 
+
+
+http://127.0.0.1:8000/
+

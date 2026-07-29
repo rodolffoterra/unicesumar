@@ -1,0 +1,34 @@
+[
+    {
+        "id": 2,
+        "nome": "Ana Souza",
+        "idade": 25,
+        "endereco": "Av. Brasil, 450",
+        "profissao": "Analista de Sistemas",
+        "salario": 6200.0
+    },
+    {
+        "id": 3,
+        "nome": "João Oliveira",
+        "idade": 41,
+        "endereco": "Rua Paraná, 98",
+        "profissao": "Professor",
+        "salario": 5400.0
+    },
+    {
+        "id": 5,
+        "nome": "Pedro Santos",
+        "idade": 28,
+        "endereco": "Rua São Paulo, 560",
+        "profissao": "Designer",
+        "salario": 4700.0
+    },
+    {
+        "id": 6,
+        "nome": "Roberto",
+        "idade": 52,
+        "endereco": "Rua rosa, 200",
+        "profissao": "Desenvolvedor",
+        "salario": 5200.5
+    }
+]

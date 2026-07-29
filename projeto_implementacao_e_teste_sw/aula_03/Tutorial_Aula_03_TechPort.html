@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial Aula 03 - Projeto TechPort</title>
+<style>
+:root {
+  --navy:#102a43;
+  --blue:#1f6feb;
+  --orange:#f28c28;
+  --green:#17864b;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --text:#243447;
+  --muted:#627d98;
+  --border:#d9e2ec;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0; font-family:Segoe UI, Arial, sans-serif; background:var(--bg); color:var(--text);
+  line-height:1.65;
+}
+header {
+  background:linear-gradient(135deg,var(--navy),#174a7e);
+  color:white; padding:54px 24px 42px;
+}
+.header-inner { max-width:1120px; margin:auto; }
+.badge {
+  display:inline-block; background:var(--orange); color:white; padding:6px 12px;
+  border-radius:999px; font-weight:700; font-size:.86rem; margin-bottom:14px;
+}
+h1 { margin:0 0 8px; font-size:clamp(2rem,5vw,3.5rem); line-height:1.1; }
+.subtitle { font-size:1.2rem; opacity:.92; max-width:760px; }
+.layout { max-width:1220px; margin:auto; display:grid; grid-template-columns:260px 1fr; gap:28px; padding:28px 22px 60px; }
+aside {
+  position:sticky; top:18px; align-self:start; background:white; border:1px solid var(--border);
+  border-radius:14px; padding:18px; box-shadow:0 8px 24px rgba(16,42,67,.07);
+}
+aside strong { display:block; color:var(--navy); margin-bottom:10px; }
+aside a {
+  display:block; color:var(--text); text-decoration:none; padding:8px 9px; border-radius:8px; font-size:.94rem;
+}
+aside a:hover { background:#eaf2ff; color:var(--blue); }
+main { min-width:0; }
+section {
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:26px; margin-bottom:24px; box-shadow:0 8px 24px rgba(16,42,67,.06);
+}
+h2 { color:var(--navy); margin-top:0; border-bottom:3px solid var(--orange); padding-bottom:8px; }
+h3 { color:#174a7e; margin-bottom:4px; }
+.flow {
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center;
+  padding:18px; background:#eef5ff; border-radius:12px; font-weight:700;
+}
+.flow span { background:white; border:1px solid #b8cff0; padding:8px 12px; border-radius:9px; }
+.flow i { color:var(--orange); font-style:normal; font-size:1.3rem; }
+.step {
+  border-left:4px solid var(--blue); background:#fbfdff; padding:14px 16px;
+  border-radius:0 10px 10px 0; margin:12px 0;
+}
+.step p { margin:2px 0 10px; color:var(--muted); }
+.codebox { position:relative; }
+pre {
+  margin:0; padding:16px 54px 16px 16px; overflow:auto; border-radius:10px;
+  background:#0d1b2a; color:#d7e8f7; font-family:Consolas, monospace; font-size:.95rem;
+}
+.copy {
+  position:absolute; right:8px; top:8px; border:0; border-radius:7px;
+  background:var(--orange); color:white; padding:7px 9px; cursor:pointer; font-weight:700;
+}
+.copy:hover { filter:brightness(.93); }
+.note, .warning, .success {
+  border-radius:10px; padding:14px 16px; margin:14px 0;
+}
+.note { background:#eaf2ff; border-left:4px solid var(--blue); }
+.warning { background:#fff4e6; border-left:4px solid var(--orange); }
+.success { background:#e8f7ef; border-left:4px solid var(--green); }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.folder {
+  background:#f8fafc; border:1px solid var(--border); border-radius:12px; padding:16px;
+}
+.folder strong { color:var(--navy); }
+.checklist label { display:block; padding:7px 0; }
+footer { background:var(--navy); color:white; text-align:center; padding:26px; }
+@media(max-width:850px) {
+  .layout { grid-template-columns:1fr; }
+  aside { position:relative; top:0; }
+  .grid { grid-template-columns:1fr; }
+}
+@media print {
+  aside, .copy { display:none; }
+  body { background:white; }
+  .layout { display:block; padding:0; }
+  section { box-shadow:none; break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <span class="badge">Projeto, Implementação e Teste de Software</span>
+    <h1>TechPort — Sistema de Gestão de Chamados</h1>
+    <div class="subtitle">Tutorial prático para criação da arquitetura inicial de uma aplicação Python profissional.</div><div style="margin-top:16px;font-size:1rem;line-height:1.8;"><strong>Professor Rodolfo Terra</strong><br><a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:underline;">LinkedIn</a> &nbsp;|&nbsp; <a href="https://github.com/rodolffoterra" target="_blank" rel="noopener noreferrer" style="color:#ffffff;text-decoration:underline;">GitHub</a></div>
+  </div>
+</header>
+
+<div class="layout">
+<aside>
+  <strong>Navegação</strong>
+  <a href="#objetivo">Objetivo</a>
+  <a href="#preparacao">Pré-requisitos</a>
+  <a href="#comandos">Comandos passo a passo</a>
+  <a href="#estrutura">Estrutura esperada</a>
+  <a href="#codigo">Primeiros esqueletos</a>
+  <a href="#responsabilidades">Responsabilidades</a>
+  <a href="#verificacao">Checklist</a>
+  <a href="#proxima-aula">Próxima aula</a>
+</aside>
+
+<main>
+<section id="objetivo">
+  <h2>Objetivo da atividade</h2>
+  <p>Nesta aula, você não construirá ainda a API. O objetivo é organizar o projeto e compreender como a arquitetura orienta a implementação.</p>
+  <div class="flow">
+    <span>Problema</span><i>→</i><span>Requisitos</span><i>→</i><span>Arquitetura</span><i>→</i>
+    <span>C4 Model</span><i>→</i><span>Estrutura</span><i>→</i><span>Implementação</span><i>→</i>
+    <span>Testes</span><i>→</i><span>Deploy</span>
+  </div>
+  <div class="note"><strong>Importante:</strong> a estrutura criada hoje servirá de base para FastAPI, PostgreSQL, SQLAlchemy, Pydantic e Pytest nas próximas aulas.</div>
+</section>
+
+<section id="preparacao">
+  <h2>Pré-requisitos</h2>
+  <div class="grid">
+    <div class="folder"><strong>Python</strong><br>Python 3.9 ou superior instalado.</div>
+    <div class="folder"><strong>Visual Studio Code</strong><br>Editor utilizado durante a disciplina.</div>
+    <div class="folder"><strong>PowerShell</strong><br>Terminal padrão do Windows.</div>
+    <div class="folder"><strong>Extensão Python</strong><br>Extensão oficial da Microsoft no VS Code.</div>
+  </div>
+  <div class="warning"><strong>Atenção:</strong> os comandos deste tutorial foram preparados para o PowerShell/Prompt de Comando do Windows.</div>
+</section>
+
+<section id="comandos">
+  <h2>Comandos passo a passo</h2>
+<h3>1. Preparar o ambiente</h3><div class="step"><strong>Abra o PowerShell</strong><p>Utilize o terminal do Windows para executar os comandos do projeto.</p></div><div class="step"><strong>Acesse a Área de Trabalho</strong><p>Entre no local onde o projeto será criado.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>cd &quot;C:\Users\SEU_USUARIO\Desktop&quot;</code></pre></div></div><div class="step"><strong>Alternativa</strong><p>Caso o PowerShell já esteja na pasta do usuário, você pode usar:</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>cd Desktop</code></pre></div></div><h3>2. Criar o projeto TechPort</h3><div class="step"><strong>Criar a pasta principal</strong><p>A pasta techport será a raiz do Sistema de Gestão de Chamados.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir techport</code></pre></div></div><div class="step"><strong>Entrar no projeto</strong><p>Todos os próximos comandos devem ser executados dentro dessa pasta.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>cd techport</code></pre></div></div><div class="step"><strong>Abrir no VS Code</strong><p>O ponto representa a pasta atual.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>code .</code></pre></div></div><h3>3. Criar as pastas da aplicação</h3><div class="step"><strong>Código-fonte</strong><p>A pasta app armazenará o código principal.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app</code></pre></div></div><div class="step"><strong>API</strong><p>Rotas e endpoints HTTP.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\api</code></pre></div></div><div class="step"><strong>Core</strong><p>Configurações centrais e segurança.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\core</code></pre></div></div><div class="step"><strong>Models</strong><p>Entidades e modelos de persistência.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\models</code></pre></div></div><div class="step"><strong>Schemas</strong><p>Validação e transferência de dados.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\schemas</code></pre></div></div><div class="step"><strong>Repositories</strong><p>Acesso e operações com o banco de dados.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\repositories</code></pre></div></div><div class="step"><strong>Services</strong><p>Regras de negócio da aplicação.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\services</code></pre></div></div><div class="step"><strong>Database</strong><p>Configuração e conexão com o banco.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\database</code></pre></div></div><div class="step"><strong>Utils</strong><p>Funções auxiliares e recursos reutilizáveis.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir app\utils</code></pre></div></div><div class="step"><strong>Tests</strong><p>Testes automatizados.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir tests</code></pre></div></div><div class="step"><strong>Docs</strong><p>Documentação e diagramas do projeto.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>mkdir docs</code></pre></div></div><h3>4. Criar os arquivos da arquitetura</h3><div class="step"><strong>Ponto de entrada</strong><p>Arquivo principal da futura aplicação FastAPI.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\main.py</code></pre></div></div><div class="step"><strong>Rotas</strong><p>Arquivo inicial das rotas da API.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\api\routes.py</code></pre></div></div><div class="step"><strong>Configurações</strong><p>Configurações gerais do sistema.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\core\config.py</code></pre></div></div><div class="step"><strong>Segurança</strong><p>Autenticação, senhas, tokens e permissões.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\core\security.py</code></pre></div></div><div class="step"><strong>Model de usuário</strong><p>Representará os usuários.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\models\usuario.py</code></pre></div></div><div class="step"><strong>Model de chamado</strong><p>Representará os chamados técnicos.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\models\chamado.py</code></pre></div></div><div class="step"><strong>Model de técnico</strong><p>Representará os técnicos responsáveis.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\models\tecnico.py</code></pre></div></div><div class="step"><strong>Schema de usuário</strong><p>Validará os dados de usuários.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\schemas\usuario.py</code></pre></div></div><div class="step"><strong>Schema de chamado</strong><p>Validará os dados de chamados.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\schemas\chamado.py</code></pre></div></div><div class="step"><strong>Repository de usuário</strong><p>Operações de persistência de usuários.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\repositories\usuario_repository.py</code></pre></div></div><div class="step"><strong>Repository de chamado</strong><p>Operações de persistência de chamados.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\repositories\chamado_repository.py</code></pre></div></div><div class="step"><strong>Service de usuário</strong><p>Regras de negócio relacionadas aos usuários.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\services\usuario_service.py</code></pre></div></div><div class="step"><strong>Service de chamado</strong><p>Regras para abertura, atualização e encerramento.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\services\chamado_service.py</code></pre></div></div><div class="step"><strong>Configuração de banco</strong><p>Configuração da persistência.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\database\database.py</code></pre></div></div><div class="step"><strong>Conexão</strong><p>Conexão futura com PostgreSQL.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\database\connection.py</code></pre></div></div><div class="step"><strong>Logger</strong><p>Registro de eventos e erros.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; app\utils\logger.py</code></pre></div></div><div class="step"><strong>README</strong><p>Descrição e instruções do projeto.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; README.md</code></pre></div></div><div class="step"><strong>Dependências</strong><p>Lista de bibliotecas Python.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; requirements.txt</code></pre></div></div><div class="step"><strong>Variáveis de ambiente</strong><p>Configurações sensíveis que não devem ficar no código.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>type nul &gt; .env</code></pre></div></div><h3>5. Conferir a estrutura</h3><div class="step"><strong>Visualizar as pastas</strong><p>Exibe a árvore básica do projeto.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>tree</code></pre></div></div><div class="step"><strong>Visualizar pastas e arquivos</strong><p>Exibe a estrutura completa.</p><div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>tree /F</code></pre></div></div>
+</section>
+
+<section id="estrutura">
+  <h2>Estrutura esperada</h2>
+  <p>Após executar todos os comandos, use <code>tree /F</code>. O resultado deverá ser semelhante a este:</p>
+  <div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>techport
+│   .env
+│   README.md
+│   requirements.txt
+│
+├── app
+│   │   main.py
+│   │
+│   ├── api
+│   │       routes.py
+│   ├── core
+│   │       config.py
+│   │       security.py
+│   ├── database
+│   │       connection.py
+│   │       database.py
+│   ├── models
+│   │       chamado.py
+│   │       tecnico.py
+│   │       usuario.py
+│   ├── repositories
+│   │       chamado_repository.py
+│   │       usuario_repository.py
+│   ├── schemas
+│   │       chamado.py
+│   │       usuario.py
+│   ├── services
+│   │       chamado_service.py
+│   │       usuario_service.py
+│   └── utils
+│           logger.py
+│
+├── docs
+└── tests</code></pre></div>
+</section>
+
+<section id="codigo">
+  <h2>Primeiros esqueletos de código</h2>
+  <p>Abra os arquivos no VS Code e adicione apenas as classes vazias. Nesta etapa, o objetivo é reconhecer onde cada responsabilidade será implementada.</p>
+
+  <div class="step">
+    <strong>app/models/usuario.py</strong>
+    <p>Representa o usuário do sistema. Os atributos serão implementados nas próximas aulas.</p>
+    <div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>class Usuario:
+    pass</code></pre></div>
+  </div>
+
+  <div class="step">
+    <strong>app/models/chamado.py</strong>
+    <p>Representa um chamado técnico registrado na aplicação.</p>
+    <div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>class Chamado:
+    pass</code></pre></div>
+  </div>
+
+  <div class="step">
+    <strong>app/models/tecnico.py</strong>
+    <p>Representa o técnico responsável pelo atendimento.</p>
+    <div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>class Tecnico:
+    pass</code></pre></div>
+  </div>
+
+  <div class="step">
+    <strong>app/services/chamado_service.py</strong>
+    <p>Concentrará as regras de abertura, priorização, atribuição e encerramento de chamados.</p>
+    <div class="codebox"><button class="copy" onclick="copyCode(this)">Copiar</button><pre><code>class ChamadoService:
+    pass</code></pre></div>
+  </div>
+
+</section>
+
+<section id="responsabilidades">
+  <h2>Responsabilidade de cada pasta</h2>
+  <div class="grid">
+    <div class="folder"><strong>app/api</strong><br>Rotas, endpoints e comunicação HTTP.</div>
+    <div class="folder"><strong>app/core</strong><br>Configurações, segurança e recursos centrais.</div>
+    <div class="folder"><strong>app/models</strong><br>Entidades e representação dos dados persistidos.</div>
+    <div class="folder"><strong>app/schemas</strong><br>Validação dos dados de entrada e saída.</div>
+    <div class="folder"><strong>app/repositories</strong><br>Operações de consulta e persistência.</div>
+    <div class="folder"><strong>app/services</strong><br>Regras de negócio do sistema.</div>
+    <div class="folder"><strong>app/database</strong><br>Configuração e conexão com PostgreSQL.</div>
+    <div class="folder"><strong>app/utils</strong><br>Funções auxiliares reutilizáveis.</div>
+    <div class="folder"><strong>tests</strong><br>Testes unitários e de integração.</div>
+    <div class="folder"><strong>docs</strong><br>Diagramas C4 e documentação técnica.</div>
+  </div>
+</section>
+
+<section id="verificacao">
+  <h2>Checklist da atividade</h2>
+  <div class="checklist">
+    <label><input type="checkbox"> Criei a pasta <code>techport</code>.</label>
+    <label><input type="checkbox"> Abri o projeto no VS Code.</label>
+    <label><input type="checkbox"> Criei todas as pastas dentro de <code>app</code>.</label>
+    <label><input type="checkbox"> Criei as pastas <code>tests</code> e <code>docs</code>.</label>
+    <label><input type="checkbox"> Criei os arquivos Python e os arquivos da raiz.</label>
+    <label><input type="checkbox"> Executei <code>tree /F</code>.</label>
+    <label><input type="checkbox"> Adicionei as classes vazias.</label>
+    <label><input type="checkbox"> Consigo explicar a responsabilidade de cada pasta.</label>
+  </div>
+  <div class="success"><strong>Resultado esperado:</strong> uma arquitetura física organizada, pronta para receber a implementação da API.</div>
+</section>
+
+<section id="proxima-aula">
+  <h2>Próxima etapa</h2>
+  <p>Na próxima aula, esta estrutura ganhará vida com a criação da API REST usando FastAPI.</p>
+  <div class="flow">
+    <span>Instalar FastAPI</span><i>→</i><span>Criar aplicação</span><i>→</i>
+    <span>Endpoints GET/POST</span><i>→</i><span>Swagger</span>
+  </div>
+  <div class="note"><strong>Mensagem final:</strong> hoje criamos a arquitetura física do projeto. Na próxima aula, começaremos a implementar o comportamento do sistema.</div>
+</section>
+</main>
+</div>
+
+<footer>
+  TechPort — Tutorial da Aula 03 | Projeto, Implementação e Teste de Software<br><strong>Professor Rodolfo Terra</strong><br><a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank" rel="noopener noreferrer" style="color:#ffffff;">LinkedIn</a> &nbsp;|&nbsp; <a href="https://github.com/rodolffoterra" target="_blank" rel="noopener noreferrer" style="color:#ffffff;">GitHub</a>
+</footer>
+
+<script>
+function copyCode(button) {
+  const code = button.parentElement.querySelector("code").innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const old = button.innerText;
+    button.innerText = "Copiado!";
+    setTimeout(() => button.innerText = old, 1200);
+  });
+}
+</script>
+</body>
+</html>

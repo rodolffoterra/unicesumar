@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therac-25 — História, Acidentes e Impacto na Engenharia de Software</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --card: #ffffff;
+            --primary: #163a5f;
+            --secondary: #2b6f9f;
+            --accent: #b42318;
+            --text: #24313d;
+            --muted: #5f6b76;
+            --border: #d9e0e6;
+            --success-bg: #edf7ed;
+            --warning-bg: #fff4e5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 56px 24px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+        }
+
+        header p {
+            margin: 0 auto;
+            max-width: 850px;
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        main {
+            width: min(1000px, calc(100% - 32px));
+            margin: 32px auto;
+        }
+
+        section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(22, 58, 95, 0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-left: 5px solid var(--secondary);
+            padding-left: 12px;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: var(--warning-bg);
+            border-left: 5px solid #f79009;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .danger {
+            background: #fff1f0;
+            border-left: 5px solid var(--accent);
+            padding: 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .summary-card strong {
+            display: block;
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        ul {
+            padding-left: 22px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 24px;
+            font-size: 0.95rem;
+        }
+
+        .note {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Therac-25</h1>
+        <p>
+            História, acidentes e importância do caso para a Engenharia de Software,
+            os testes e o desenvolvimento de sistemas críticos.
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>O que foi o Therac-25?</h2>
+            <p>
+                O <strong>Therac-25</strong> foi um equipamento de radioterapia utilizado
+                no tratamento de pacientes com câncer. Ele foi desenvolvido pela empresa
+                canadense <strong>Atomic Energy of Canada Limited — AECL</strong>.
+            </p>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <strong>1976</strong>
+                    Primeiro protótipo do equipamento.
+                </div>
+
+                <div class="summary-card">
+                    <strong>1982–1983</strong>
+                    Período em que começou a ser colocado no mercado.
+                </div>
+
+                <div class="summary-card">
+                    <strong>1985–1987</strong>
+                    Período dos seis acidentes conhecidos.
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Quantas pessoas morreram?</h2>
+
+            <div class="danger">
+                <strong>Foram registrados seis acidentes conhecidos.</strong>
+                Pelo menos três mortes são frequentemente apontadas como diretamente
+                relacionadas às superdoses de radiação. Os demais pacientes sofreram
+                lesões graves e permanentes.
+            </div>
+
+            <ul>
+                <li>Queimaduras severas provocadas pela radiação.</li>
+                <li>Danos neurológicos permanentes.</li>
+                <li>Destruição de tecidos.</li>
+                <li>Complicações médicas graves.</li>
+                <li>Necessidade de procedimentos cirúrgicos em alguns casos.</li>
+            </ul>
+
+            <p class="note">
+                O número exato de mortes pode variar conforme a fonte e o critério usado
+                para relacionar posteriormente o falecimento à exposição recebida.
+            </p>
+        </section>
+
+        <section>
+            <h2>O que aconteceu?</h2>
+            <p>
+                A função do Therac-25 era aplicar uma dose controlada de radiação para
+                destruir células cancerígenas. Entretanto, em determinadas situações,
+                falhas no software e no projeto de segurança permitiam que o equipamento
+                aplicasse doses muito superiores às prescritas.
+            </p>
+
+            <div class="highlight">
+                Em alguns relatos, as doses aplicadas foram estimadas em centenas de
+                vezes acima do valor planejado.
+            </div>
+
+            <p>
+                O problema estava associado, entre outros fatores, a uma
+                <strong>condição de corrida</strong>, conhecida em inglês como
+                <em>race condition</em>. Essa falha podia ocorrer quando o operador
+                alterava rapidamente determinadas informações no sistema.
+            </p>
+        </section>
+
+        <section>
+            <h2>Por que as falhas aconteceram?</h2>
+
+            <h3>Confiança excessiva no software</h3>
+            <p>
+                Modelos anteriores possuíam proteções físicas e mecânicas. No Therac-25,
+                parte dessas proteções foi removida porque os projetistas confiaram que
+                o software seria capaz de impedir operações perigosas.
+            </p>
+
+            <h3>Falhas de concorrência</h3>
+            <p>
+                O sistema possuía problemas relacionados à ordem e ao tempo de execução
+                de determinadas operações internas.
+            </p>
+
+            <h3>Testes insuficientes</h3>
+            <p>
+                Situações incomuns, como alterações muito rápidas feitas pelo operador,
+                não foram suficientemente testadas.
+            </p>
+
+            <h3>Mensagens de erro inadequadas</h3>
+            <p>
+                O equipamento apresentava códigos de erro pouco claros. Isso dificultava
+                o entendimento da gravidade do problema pelos operadores.
+            </p>
+
+            <h3>Demora na investigação</h3>
+            <p>
+                Inicialmente, o fabricante considerou pouco provável que o software
+                pudesse produzir uma dose excessiva, o que atrasou o reconhecimento
+                completo do problema.
+            </p>
+
+            <h3>Ausência de redundância</h3>
+            <p>
+                O equipamento dependia excessivamente do software para controlar funções
+                críticas, sem mecanismos físicos independentes suficientes para impedir
+                uma operação insegura.
+            </p>
+        </section>
+
+        <section>
+            <h2>Por que esse caso é tão importante?</h2>
+            <p>
+                O Therac-25 tornou-se um dos estudos de caso mais conhecidos da história
+                da Engenharia de Software. Ele demonstrou que erros de programação,
+                arquitetura, testes, comunicação e gestão podem provocar consequências
+                reais e fatais.
+            </p>
+
+            <p>O caso é estudado em áreas como:</p>
+
+            <ul>
+                <li>Engenharia de Software.</li>
+                <li>Testes de Software.</li>
+                <li>Sistemas críticos.</li>
+                <li>Segurança de Software.</li>
+                <li>Engenharia de Requisitos.</li>
+                <li>Ética em Computação.</li>
+                <li>Qualidade de Software.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Principais lições do Therac-25</h2>
+
+            <ul>
+                <li>Software também pode colocar vidas em risco.</li>
+                <li>Sistemas críticos exigem testes rigorosos e contínuos.</li>
+                <li>Não se deve depender de uma única camada de segurança.</li>
+                <li>Proteções de hardware e software devem atuar em conjunto.</li>
+                <li>Mensagens de erro precisam ser claras e compreensíveis.</li>
+                <li>Falhas relatadas por operadores e usuários devem ser investigadas.</li>
+                <li>O código deve passar por revisão técnica.</li>
+                <li>O sistema deve ser testado em situações normais e extremas.</li>
+                <li>A segurança deve fazer parte do projeto desde o início.</li>
+                <li>A empresa precisa reconhecer, comunicar e corrigir falhas rapidamente.</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>Conclusão:</strong> quanto maior o risco de um sistema, maior deve
+                ser o nível de qualidade, testes, validação, segurança e responsabilidade
+                envolvidos no seu desenvolvimento.
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Material didático sobre o caso Therac-25 e sua relação com a Engenharia de Software.
+    </footer>
+</body>
+</html>
