@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 03 - FastAPI, MySQL e Streamlit</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;background:#eef2f6;color:#1f2933;margin:0;line-height:1.6}
+.container{width:min(1100px,92%);margin:32px auto}
+header{background:linear-gradient(135deg,#17324d,#265d86);color:#fff;padding:36px;border-radius:16px}
+.card{background:#fff;border:1px solid #d9e0e7;border-radius:14px;padding:24px;margin-top:22px}
+h1,h2,h3{margin-top:0} h2{color:#17324d;border-bottom:2px solid #eaf3fb;padding-bottom:8px}
+.step{display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;border-radius:50%;background:#17324d;color:#fff;margin-right:8px}
+pre{background:#111827;color:#f9fafb;padding:16px;border-radius:10px;overflow-x:auto}
+code{font-family:Consolas,monospace}
+.info,.ok,.warn,.danger{padding:14px 16px;border-radius:10px;margin:14px 0}
+.info{background:#eaf3fb;border-left:5px solid #2d6ea3}
+.ok{background:#e8f7ef;border-left:5px solid #1f7a4d}
+.warn{background:#fff6d8;border-left:5px solid #c49316}
+.danger{background:#fdeaea;border-left:5px solid #a62d2d}
+.url{display:inline-block;background:#edf7ff;color:#0c4a6e;padding:8px 12px;border-radius:8px;font-family:Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin-top:14px}
+th,td{border:1px solid #d9e0e7;padding:10px;text-align:left}
+th{background:#eaf3fb;color:#17324d}
+footer{text-align:center;color:#64748b;padding:28px 0}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>🎬 Aula 03 — FastAPI, MySQL e Streamlit</h1>
+<p>Tutorial para executar e finalizar o projeto no VS Code usando PowerShell.</p>
+<p><strong>Professor Rodolfo Terra</strong></p>
+<p>
+LinkedIn:
+<a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank" style="color:#ffffff;">
+https://www.linkedin.com/in/rodolffoterra/
+</a>
+</p>
+<p>
+GitHub:
+<a href="https://github.com/rodolffoterra/unicesumar/tree/main/back_end" target="_blank" style="color:#ffffff;">
+https://github.com/rodolffoterra/unicesumar/tree/main/back_end
+</a>
+</p>
+</header>
+
+<section class="card">
+<h2>Arquitetura do projeto</h2>
+<div class="info"><strong>Streamlit → FastAPI → MySQL → sakila.actor</strong></div>
+<p>A API precisa permanecer em execução enquanto o Streamlit estiver sendo utilizado.</p>
+</section>
+
+<section class="card">
+<h2><span class="step">1</span>Abrir a pasta do projeto</h2>
+<p>Abra no VS Code a pasta raiz que contém <code>app</code>, <code>streamlit_app</code>, <code>.env</code> e <code>requirements.txt</code>.</p>
+<pre><code>aula_03/
+├── app/
+│   ├── __init__.py
+│   ├── database.py
+│   ├── main.py
+│   └── schemas.py
+├── streamlit_app/
+│   └── app.py
+├── .env
+└── requirements.txt</code></pre>
+</section>
+
+<section class="card">
+<h2><span class="step">2</span>Criar a venv</h2>
+<pre><code>python -m venv .venv</code></pre>
+</section>
+
+<section class="card">
+<h2><span class="step">3</span>Ativar a venv</h2>
+<pre><code>.\.venv\Scripts\Activate.ps1</code></pre>
+<div class="warn">
+Caso o PowerShell bloqueie:
+<pre><code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1</code></pre>
+</div>
+</section>
+
+<section class="card">
+<h2><span class="step">4</span>Instalar as bibliotecas</h2>
+<pre><code>python -m pip install --upgrade pip
+python -m pip install -r requirements.txt</code></pre>
+</section>
+
+<section class="card">
+<h2><span class="step">5</span>Iniciar a API</h2>
+<p>No primeiro terminal:</p>
+<pre><code>python -m uvicorn app.main:app --reload</code></pre>
+<div class="danger">Não feche esse terminal enquanto estiver usando a aplicação.</div>
+</section>
+
+<section class="card">
+<h2><span class="step">6</span>Acessar Swagger e testar o MySQL</h2>
+<p>Swagger:</p>
+<p><span class="url">http://127.0.0.1:8000/docs</span></p>
+<p>Teste de conexão:</p>
+<p><span class="url">http://127.0.0.1:8000/health</span></p>
+<table>
+<tr><th>Método</th><th>Endpoint</th><th>Função</th></tr>
+<tr><td>GET</td><td>/atores</td><td>Listar atores</td></tr>
+<tr><td>GET</td><td>/atores/{actor_id}</td><td>Consultar por ID</td></tr>
+<tr><td>POST</td><td>/atores</td><td>Cadastrar ator</td></tr>
+<tr><td>PUT</td><td>/atores/{actor_id}</td><td>Atualizar ator</td></tr>
+<tr><td>DELETE</td><td>/atores/{actor_id}</td><td>Excluir ator</td></tr>
+</table>
+</section>
+
+<section class="card">
+<h2><span class="step">7</span>Iniciar o Streamlit</h2>
+<p>Abra um segundo terminal no VS Code e ative novamente a venv:</p>
+<pre><code>.\.venv\Scripts\Activate.ps1</code></pre>
+<p>Depois execute:</p>
+<pre><code>python -m streamlit run streamlit_app\app.py</code></pre>
+<p>Acesso padrão:</p>
+<p><span class="url">http://localhost:8501</span></p>
+</section>
+
+<section class="card">
+<h2><span class="step">8</span>Finalizar o Streamlit</h2>
+<p>No terminal do Streamlit:</p>
+<pre><code>Ctrl + C</code></pre>
+<p>Depois desative a venv:</p>
+<pre><code>deactivate</code></pre>
+</section>
+
+<section class="card">
+<h2><span class="step">9</span>Finalizar a API</h2>
+<p>No terminal da API:</p>
+<pre><code>Ctrl + C</code></pre>
+<p>Depois desative a venv:</p>
+<pre><code>deactivate</code></pre>
+<div class="ok">A API e o Streamlit estarão encerrados, e a venv estará desativada nos dois terminais.</div>
+</section>
+
+<section class="card">
+<h2>Resumo rápido</h2>
+<h3>Terminal 1 — API</h3>
+<pre><code>python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m uvicorn app.main:app --reload</code></pre>
+<h3>Terminal 2 — Streamlit</h3>
+<pre><code>.\.venv\Scripts\Activate.ps1
+python -m streamlit run streamlit_app\app.py</code></pre>
+<h3>Encerramento em cada terminal</h3>
+<pre><code>Ctrl + C
+deactivate</code></pre>
+</section>
+
+<footer>Aula 03 — Programação Back-End | FastAPI, Streamlit e MySQL</footer>
+</div>
+</body>
+</html>
