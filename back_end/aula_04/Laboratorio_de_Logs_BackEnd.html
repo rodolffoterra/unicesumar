@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratório de Logs - Back-End</title>
+<style>
+:root{
+--navy:#102a43;--blue:#1f6feb;--orange:#f28c28;--green:#17864b;
+--bg:#f4f7fb;--card:#fff;--border:#d9e2ec;--text:#243447;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Segoe UI,Arial,sans-serif;color:var(--text);line-height:1.7}
+header{background:linear-gradient(135deg,var(--navy),#184c80);color:#fff;padding:50px 25px}
+.wrap{max-width:1200px;margin:auto}
+.badge{display:inline-block;background:var(--orange);padding:6px 14px;border-radius:30px;font-weight:bold}
+h1{margin:15px 0 8px;font-size:46px}
+.subtitle{opacity:.9;font-size:18px}
+.links{margin-top:18px}
+.links a{color:#fff;margin-right:18px}
+.layout{display:grid;grid-template-columns:250px 1fr;gap:25px;max-width:1200px;margin:25px auto;padding:0 20px}
+aside{position:sticky;top:20px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;height:fit-content}
+aside a{display:block;padding:8px;text-decoration:none;color:#333;border-radius:8px}
+aside a:hover{background:#eef5ff}
+section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:22px;box-shadow:0 4px 18px rgba(0,0,0,.05)}
+h2{color:var(--navy);border-bottom:3px solid var(--orange);padding-bottom:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{border-radius:10px;padding:15px}
+.front{background:#eef6ff;border-left:5px solid var(--blue)}
+.log{background:#0d1b2a;color:#7CFC8A;font-family:Consolas,monospace;white-space:pre-wrap}
+.tip{background:#e9f7ef;border-left:5px solid var(--green);padding:15px;border-radius:8px;margin-top:15px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #dcdcdc;padding:10px}
+th{background:var(--blue);color:#fff}
+footer{background:var(--navy);color:#fff;text-align:center;padding:25px;margin-top:30px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:relative}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<span class="badge">Programação Back-End</span>
+<h1>Laboratório de Logs</h1>
+<div class="subtitle">Material de apoio para a aplicação Streamlit desenvolvida em aula.</div>
+<div class="links">
+<strong>Professor Rodolfo Terra</strong><br>
+<a href="https://www.linkedin.com/in/rodolffoterra/">LinkedIn</a>
+<a href="https://github.com/rodolffoterra">GitHub</a>
+</div>
+</div>
+</header>
+
+<div class="layout">
+<aside>
+<b>Navegação</b>
+<a href="#bug">Bug</a>
+<a href="#info">INFO</a>
+<a href="#debug">DEBUG</a>
+<a href="#warning">WARNING</a>
+<a href="#error">ERROR</a>
+<a href="#critical">CRITICAL</a>
+<a href="#final">Demonstração Final</a>
+</aside>
+
+<main>
+<section>
+<h2>Objetivo</h2>
+<p>Este laboratório demonstra como uma aplicação Back-End registra eventos durante sua execução. Em cada exemplo o aluno observa o comportamento do Front-End e o log produzido pelo Back-End.</p>
+</section>
+
+<section id="bug">
+<h2>🐞 O que é um Bug?</h2>
+<p>Um bug é um comportamento inesperado da aplicação.</p>
+<div class="grid">
+<div class="card front">
+<h3>Front-End</h3>
+<p>Usuário informa idade = abc e pressiona Salvar.</p>
+</div>
+<div class="card log">
+06/08/2026 13:18:27 | INFO     | Usuário clicou em Salvar
+06/08/2026 13:18:27 | DEBUG    | Validando formulário
+06/08/2026 13:18:28 | ERROR    | Campo idade inválido
+06/08/2026 13:18:28 | INFO     | Mensagem apresentada ao usuário
+</div>
+</div>
+<div class="tip"><strong>O que aprender?</strong> Analise o que ocorreu na interface e compare com as informações registradas no log.</div>
+</section>
+
+<section id="info">
+<h2>🔵 INFO</h2>
+<p>Registra eventos normais da aplicação.</p>
+<div class="grid">
+<div class="card front">
+<h3>Front-End</h3>
+<p>Login realizado com sucesso.</p>
+</div>
+<div class="card log">
+06/08/2026 13:18:27 | INFO     | Usuário autenticado
+06/08/2026 13:18:28 | INFO     | Token JWT criado
+</div>
+</div>
+<div class="tip"><strong>O que aprender?</strong> Analise o que ocorreu na interface e compare com as informações registradas no log.</div>
+</section>
+
+<section id="debug">
+<h2>🟣 DEBUG</h2>
+<p>Auxilia o desenvolvedor durante testes.</p>
+<div class="grid">
+<div class="card front">
+<h3>Front-End</h3>
+<p>Consulta de clientes.</p>
+</div>
+<div class="card log">
+06/08/2026 13:18:27 | DEBUG    | Conectando MySQL
+06/08/2026 13:18:28 | DEBUG    | Executando SELECT
+</div>
+</div>
+<div class="tip"><strong>O que aprender?</strong> Analise o que ocorreu na interface e compare com as informações registradas no log.</div>
+</section>
+
+<section id="warning">
+<h2>🟡 WARNING</h2>
+<p>Indica situação incomum.</p>
+<div class="grid">
+<div class="card front">
+<h3>Front-End</h3>
+<p>Consulta demorou mais que o esperado.</p>
+</div>
+<div class="card log">
+06/08/2026 13:18:27 | WARNING  | Consulta demorou 820 ms
+</div>
+</div>
+<div class="tip"><strong>O que aprender?</strong> Analise o que ocorreu na interface e compare com as informações registradas no log.</div>
+</section>
+
+<section id="error">
+<h2>🔴 ERROR</h2>
+<p>Erro tratado pela aplicação.</p>
+<div class="grid">
+<div class="card front">
+<h3>Front-End</h3>
+<p>Falha na API externa.</p>
+</div>
+<div class="card log">
+06/08/2026 13:18:27 | ERROR    | Timeout ao consultar serviço
+06/08/2026 13:18:28 | INFO     | Retry executado
+</div>
+</div>
+<div class="tip"><strong>O que aprender?</strong> Analise o que ocorreu na interface e compare com as informações registradas no log.</div>
+</section>
+
+<section id="critical">
+<h2>🚨 CRITICAL</h2>
+<p>Falha crítica que exige ação imediata.</p>
+<div class="grid">
+<div class="card front">
+<h3>Front-End</h3>
+<p>Banco indisponível.</p>
+</div>
+<div class="card log">
+06/08/2026 13:18:27 | CRITICAL | Espaço em disco abaixo de 5%
+06/08/2026 13:18:28 | CRITICAL | Banco indisponível
+</div>
+</div>
+<div class="tip"><strong>O que aprender?</strong> Analise o que ocorreu na interface e compare com as informações registradas no log.</div>
+</section>
+
+<section id="final">
+<h2>🎬 Demonstração Completa</h2>
+<p>Ao final da aplicação Streamlit todos os níveis de log são executados em sequência e um arquivo <strong>logs/aplicacao.log</strong> é salvo automaticamente.</p>
+<table>
+<tr><th>Nível</th><th>Finalidade</th></tr>
+<tr><td>INFO</td><td>Eventos normais.</td></tr>
+<tr><td>DEBUG</td><td>Diagnóstico para desenvolvedores.</td></tr>
+<tr><td>WARNING</td><td>Situação de atenção.</td></tr>
+<tr><td>ERROR</td><td>Erro tratado.</td></tr>
+<tr><td>CRITICAL</td><td>Falha crítica.</td></tr>
+</table>
+</section>
+</main>
+</div>
+
+<footer>
+Laboratório de Logs • Programação Back-End<br>
+<strong>Professor Rodolfo Terra</strong><br>
+<a style="color:white" href="https://www.linkedin.com/in/rodolffoterra/">LinkedIn</a> |
+<a style="color:white" href="https://github.com/rodolffoterra">GitHub</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,9 @@
+11/08/2026 20:01:30 | INFO     | Aplicação iniciada
+11/08/2026 20:01:31 | INFO     | Usuário autenticado
+11/08/2026 20:01:32 | INFO     | GET /clientes
+11/08/2026 20:01:33 | DEBUG    | Executando consulta SQL
+11/08/2026 20:01:33 | WARNING  | Consulta demorou 820 ms
+11/08/2026 20:01:34 | ERROR    | Falha temporária ao consultar serviço externo
+11/08/2026 20:01:35 | INFO     | Retry executado com sucesso
+11/08/2026 20:01:36 | CRITICAL | Espaço em disco abaixo de 5%
+11/08/2026 20:01:37 | INFO     | Resposta enviada ao cliente

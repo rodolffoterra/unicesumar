@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git e GitHub — Do Projeto Local ao Repositório Remoto</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --card: #ffffff;
+            --primary: #163a5f;
+            --secondary: #2b6f9f;
+            --accent: #b42318;
+            --text: #24313d;
+            --muted: #5f6b76;
+            --border: #d9e0e6;
+            --success-bg: #edf7ed;
+            --warning-bg: #fff4e5;
+            --code-bg: #0f1720;
+            --code-text: #e6edf3;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 56px 24px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+        }
+
+        header p {
+            margin: 0 auto;
+            max-width: 850px;
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        main {
+            width: min(1000px, calc(100% - 32px));
+            margin: 32px auto;
+        }
+
+        section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(22, 58, 95, 0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-left: 5px solid var(--secondary);
+            padding-left: 12px;
+        }
+
+        h3 {
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: var(--warning-bg);
+            border-left: 5px solid #f79009;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .success {
+            background: var(--success-bg);
+            border-left: 5px solid #2e7d32;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .danger {
+            background: #fff1f0;
+            border-left: 5px solid var(--accent);
+            padding: 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .summary-card strong {
+            display: block;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 18px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            border: 1px solid #263442;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .command-title {
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 20px;
+            margin-bottom: 6px;
+        }
+
+        ul, ol { padding-left: 22px; }
+        li { margin-bottom: 8px; }
+
+        .flow {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary);
+            line-height: 2;
+        }
+
+        .note {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 24px;
+            font-size: 0.95rem;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Git e GitHub</h1>
+        <p>
+            Guia prático de comandos para transformar uma pasta local em um repositório Git
+            e publicar o projeto no GitHub do início ao fim.
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Fluxo completo</h2>
+            <div class="flow">
+                Projeto local<br>
+                ↓<br>
+                Git<br>
+                ↓<br>
+                Commit<br>
+                ↓<br>
+                GitHub<br>
+                ↓<br>
+                Push
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card"><strong>1. Preparar</strong>Entrar na pasta do projeto.</div>
+                <div class="summary-card"><strong>2. Iniciar</strong>Criar o repositório Git local.</div>
+                <div class="summary-card"><strong>3. Versionar</strong>Adicionar arquivos e criar commit.</div>
+                <div class="summary-card"><strong>4. Publicar</strong>Conectar ao GitHub e executar push.</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>1. Entrar na pasta do projeto</h2>
+            <p>Abra o terminal do VS Code, PowerShell, CMD ou Git Bash e navegue até a pasta que será versionada.</p>
+
+            <div class="command-title">Exemplo:</div>
+            <pre><code>cd C:\Users\SeuUsuario\Desktop\meu_projeto</code></pre>
+
+            <p>Confirme se está na pasta correta:</p>
+            <pre><code>dir</code></pre>
+
+            <p class="note">No Git Bash, Linux ou macOS, você também pode usar <code>ls</code>.</p>
+        </section>
+
+        <section>
+            <h2>2. Configurar Git pela primeira vez</h2>
+            <p>Essa configuração normalmente é feita apenas uma vez no computador.</p>
+
+            <div class="command-title">Definir seu nome:</div>
+            <pre><code>git config --global user.name "Seu Nome"</code></pre>
+
+            <div class="command-title">Definir seu e-mail:</div>
+            <pre><code>git config --global user.email "seuemail@exemplo.com"</code></pre>
+
+            <div class="command-title">Verificar a configuração:</div>
+            <pre><code>git config --global --list</code></pre>
+        </section>
+
+        <section>
+            <h2>3. Iniciar o repositório local</h2>
+            <p>Dentro da pasta do projeto, execute:</p>
+            <pre><code>git init</code></pre>
+
+            <div class="success">
+                O comando <strong>git init</strong> transforma a pasta atual em um repositório Git.
+            </div>
+
+            <p>Verifique a situação dos arquivos:</p>
+            <pre><code>git status</code></pre>
+        </section>
+
+        <section>
+            <h2>4. Criar o arquivo .gitignore</h2>
+            <p>Antes de adicionar os arquivos, é recomendado ignorar itens que não devem ir para o GitHub.</p>
+
+            <p>Exemplo para projetos Python:</p>
+            <pre><code>.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+logs/
+.idea/
+.vscode/</code></pre>
+
+            <div class="danger">
+                Nunca publique senhas, tokens, chaves de API, arquivos <strong>.env</strong> ou outras credenciais.
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Adicionar os arquivos ao Git</h2>
+            <p>Para adicionar todos os arquivos da pasta:</p>
+            <pre><code>git add .</code></pre>
+
+            <p>Depois confira:</p>
+            <pre><code>git status</code></pre>
+
+            <div class="highlight">
+                <strong>git add .</strong> prepara os arquivos para o próximo commit. Ele ainda não publica nada no GitHub.
+            </div>
+        </section>
+
+        <section>
+            <h2>6. Criar o primeiro commit</h2>
+            <p>O commit registra um ponto da evolução do projeto.</p>
+            <pre><code>git commit -m "Primeiro commit"</code></pre>
+
+            <p>Outros exemplos:</p>
+            <pre><code>git commit -m "Cria estrutura inicial do projeto"
+git commit -m "Adiciona API FastAPI"
+git commit -m "Corrige conexão com banco de dados"</code></pre>
+        </section>
+
+        <section>
+            <h2>7. Criar um repositório no GitHub</h2>
+            <ol>
+                <li>Acesse o GitHub.</li>
+                <li>Clique em <strong>New repository</strong>.</li>
+                <li>Informe o nome do repositório.</li>
+                <li>Escolha se ele será público ou privado.</li>
+                <li>Clique em <strong>Create repository</strong>.</li>
+            </ol>
+
+            <div class="highlight">
+                Se o projeto já existe localmente, prefira criar o repositório remoto vazio, sem README, .gitignore ou licença.
+            </div>
+        </section>
+
+        <section>
+            <h2>8. Conectar o projeto local ao GitHub</h2>
+            <p>Copie a URL HTTPS do repositório criado e execute:</p>
+            <pre><code>git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git</code></pre>
+
+            <p>Confirme a conexão:</p>
+            <pre><code>git remote -v</code></pre>
+        </section>
+
+        <section>
+            <h2>9. Definir a branch principal</h2>
+            <p>Para padronizar a branch principal como <strong>main</strong>:</p>
+            <pre><code>git branch -M main</code></pre>
+        </section>
+
+        <section>
+            <h2>10. Enviar o projeto para o GitHub</h2>
+            <p>Agora faça o primeiro envio:</p>
+            <pre><code>git push -u origin main</code></pre>
+
+            <div class="success">
+                Depois desse comando, o projeto local estará publicado no repositório remoto do GitHub.
+            </div>
+        </section>
+
+        <section>
+            <h2>Sequência completa para um projeto novo</h2>
+            <p>Depois de criar o repositório vazio no GitHub, esta é a sequência principal:</p>
+            <pre><code>cd caminho\do\projeto
+
+git init
+
+git status
+
+git add .
+
+git commit -m "Primeiro commit"
+
+git branch -M main
+
+git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
+
+git push -u origin main</code></pre>
+        </section>
+
+        <section>
+            <h2>Depois do primeiro push</h2>
+            <p>Quando fizer novas alterações, o fluxo fica menor:</p>
+            <pre><code>git status
+
+git add .
+
+git commit -m "Descrição da alteração"
+
+git push</code></pre>
+
+            <div class="flow">
+                Alterar arquivo → git add → git commit → git push
+            </div>
+        </section>
+
+        <section>
+            <h2>Comandos importantes do dia a dia</h2>
+
+            <h3>Ver situação do projeto</h3>
+            <pre><code>git status</code></pre>
+
+            <h3>Ver histórico de commits</h3>
+            <pre><code>git log</code></pre>
+
+            <h3>Ver histórico resumido</h3>
+            <pre><code>git log --oneline</code></pre>
+
+            <h3>Ver repositório remoto</h3>
+            <pre><code>git remote -v</code></pre>
+
+            <h3>Baixar atualizações do GitHub</h3>
+            <pre><code>git pull</code></pre>
+
+            <h3>Enviar novos commits</h3>
+            <pre><code>git push</code></pre>
+        </section>
+
+        <section>
+            <h2>Clonar um repositório existente</h2>
+            <p>Se o projeto já existe no GitHub e você deseja baixá-lo:</p>
+            <pre><code>git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git</code></pre>
+
+            <p>Depois entre na pasta criada:</p>
+            <pre><code>cd SEU_REPOSITORIO</code></pre>
+
+            <p>E verifique:</p>
+            <pre><code>git status</code></pre>
+        </section>
+
+        <section>
+            <h2>Quando o remote origin já existe</h2>
+            <p>Se aparecer a mensagem <strong>remote origin already exists</strong>, primeiro verifique:</p>
+            <pre><code>git remote -v</code></pre>
+
+            <p>Para trocar a URL:</p>
+            <pre><code>git remote set-url origin https://github.com/SEU_USUARIO/NOVO_REPOSITORIO.git</code></pre>
+        </section>
+
+        <section>
+            <h2>Quando o repositório remoto já possui arquivos</h2>
+            <p>Se o GitHub já possuir README ou outro commit, pode ser necessário baixar antes de enviar:</p>
+            <pre><code>git pull origin main --rebase</code></pre>
+
+            <p>Depois:</p>
+            <pre><code>git push -u origin main</code></pre>
+        </section>
+
+        <section>
+            <h2>Resumo final</h2>
+            <ul>
+                <li><strong>git init</strong> — inicia o versionamento.</li>
+                <li><strong>git status</strong> — mostra o estado dos arquivos.</li>
+                <li><strong>git add .</strong> — prepara os arquivos.</li>
+                <li><strong>git commit</strong> — registra uma versão.</li>
+                <li><strong>git remote add origin</strong> — conecta ao GitHub.</li>
+                <li><strong>git branch -M main</strong> — define a branch principal.</li>
+                <li><strong>git push</strong> — envia commits para o GitHub.</li>
+                <li><strong>git pull</strong> — baixa alterações do GitHub.</li>
+                <li><strong>git clone</strong> — copia um repositório existente.</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>Fluxo essencial:</strong><br>
+                git init → git add . → git commit → git remote → git push
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <strong>Professor Rodolfo Terra</strong><br>
+        Material didático — Git e GitHub<br>
+        LinkedIn: <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank">linkedin.com/in/rodolffoterra</a><br>
+        GitHub: <a href="https://github.com/rodolffoterra" target="_blank">github.com/rodolffoterra</a>
+    </footer>
+</body>
+</html>
