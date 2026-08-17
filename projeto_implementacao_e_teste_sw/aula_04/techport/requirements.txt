@@ -1,0 +1,16 @@
+# ==========================================================
+# TECHPORT - DEPENDÊNCIAS DO PROJETO
+# Projeto, Implementação e Teste de Software
+# ==========================================================
+
+# Interface Web
+streamlit==1.50.0
+
+# Conexão Python com MySQL
+mysql-connector-python
+
+# Leitura das variáveis do arquivo .env
+python-dotenv
+
+# Criptografia e descriptografia da senha
+cryptography
