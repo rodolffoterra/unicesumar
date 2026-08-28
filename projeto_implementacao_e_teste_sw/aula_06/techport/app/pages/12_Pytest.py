@@ -3,20 +3,10 @@ from pathlib import Path
 
 import streamlit as st
 
-
-# ============================================================
-# CAMINHO RAIZ DO PROJETO
-# ============================================================
-
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
-
-
-# ============================================================
-# IMPORTS DO PROJETO
-# ============================================================
 
 from app.utils.test_runner import (
     python_command,
@@ -25,9 +15,9 @@ from app.utils.test_runner import (
 )
 
 
-# ============================================================
+# ==========================================================
 # CONFIGURAÇÃO DA PÁGINA
-# ============================================================
+# ==========================================================
 
 st.set_page_config(
     page_title="TechPort | pytest",
@@ -38,14 +28,9 @@ st.set_page_config(
 st.title("🧪 2. pytest — Testes automatizados")
 
 st.write(
-    "Execute os testes de forma individual e acompanhe "
-    "exatamente o resultado produzido pelo pytest."
+    "Executa os testes automatizados do projeto e apresenta "
+    "individualmente os resultados encontrados."
 )
-
-
-# ============================================================
-# EXPLICAÇÃO
-# ============================================================
 
 st.code(
     "python -m pytest -vv",
@@ -53,356 +38,379 @@ st.code(
 )
 
 st.info(
-    "Use `-vv` para visualizar o nome de cada teste e seu resultado "
-    "individual: PASSED, FAILED, ERROR, SKIPPED ou NO TESTS."
+    "Use `-vv` para enxergar o nome de cada teste e seu resultado "
+    "individual: PASSED, FAILED, ERROR ou SKIPPED."
 )
 
 
-# ============================================================
-# FUNÇÃO AUXILIAR
-# ============================================================
+# ==========================================================
+# EXPLICAÇÃO DIDÁTICA
+# ==========================================================
 
-def executar_teste(
-    titulo: str,
-    caminho_teste: str,
-    descricao: str,
-) -> None:
-    """
-    Executa um teste específico e mostra a interpretação
-    apenas daquele resultado.
-    """
+with st.expander("ℹ️ O que o pytest verifica?"):
 
-    st.markdown(f"### {titulo}")
-    st.caption(descricao)
+    st.markdown(
+        """
+O **pytest** é uma ferramenta utilizada para criar e executar
+testes automatizados em aplicações Python.
 
-    st.code(
-        f"python -m pytest {caminho_teste} -vv -s",
-        language="powershell",
+Enquanto ferramentas como Ruff, mypy e Bandit analisam o código
+estaticamente, o pytest **executa os testes** para verificar se
+o comportamento da aplicação corresponde ao resultado esperado.
+
+Ele pode ser utilizado para diferentes níveis de teste, como:
+
+- testes unitários;
+- testes de integração;
+- testes funcionais;
+- testes de API;
+- testes de banco de dados;
+- testes de regressão;
+- testes End-to-End (E2E).
+
+### Fluxo da execução
+
+`Código → Caso de Teste → pytest → Execução → Resultado`
+
+O pytest ajuda a responder:
+
+> O sistema está se comportando da forma que esperamos?
+
+### Exemplo 1 — Teste simples
+
+Imagine a seguinte função:
+
+```python
+def somar(a, b):
+    return a + b
+```
+
+Podemos criar o teste:
+
+```python
+def test_somar():
+    assert somar(2, 3) == 5
+```
+
+Ao executar o pytest, ele compara:
+
+```text
+Resultado obtido → 5
+Resultado esperado → 5
+```
+
+Se forem iguais:
+
+```text
+PASSED
+```
+
+### Exemplo 2 — Teste que falha
+
+Considere:
+
+```python
+def multiplicar(a, b):
+    return a + b
+```
+
+E o teste:
+
+```python
+def test_multiplicar():
+    assert multiplicar(2, 3) == 6
+```
+
+A função retorna:
+
+```text
+5
+```
+
+mas o teste esperava:
+
+```text
+6
+```
+
+O resultado será:
+
+```text
+FAILED
+```
+
+Isso significa:
+
+> O teste foi executado, mas o comportamento encontrado
+> foi diferente do comportamento esperado.
+
+### Exemplo 3 — Testando exceções
+
+Também é possível verificar se uma operação gera corretamente
+uma exceção.
+
+```python
+import pytest
+
+def dividir(a, b):
+    return a / b
+
+def test_divisao_por_zero():
+    with pytest.raises(ZeroDivisionError):
+        dividir(10, 0)
+```
+
+Nesse caso, o teste passa se a exceção esperada ocorrer.
+
+### Como interpretar os resultados
+
+O pytest pode apresentar diferentes estados:
+
+| Resultado | Significado |
+|---|---|
+| `PASSED` | O teste executou e obteve o resultado esperado |
+| `FAILED` | O teste executou, mas encontrou um resultado diferente |
+| `ERROR` | O teste não conseguiu ser executado corretamente |
+| `SKIPPED` | O teste foi ignorado intencionalmente |
+
+### Diferença entre FAILED e ERROR
+
+Essa diferença é muito importante.
+
+#### FAILED
+
+```text
+Testei
+↓
+O código executou
+↓
+O resultado foi diferente do esperado
+```
+
+Exemplo:
+
+```python
+assert 2 + 2 == 5
+```
+
+#### ERROR
+
+```text
+Tentei testar
+↓
+Algo impediu a execução do teste
+↓
+O teste não conseguiu chegar à validação
+```
+
+Pode ocorrer por:
+
+- erro de importação;
+- biblioteca ausente;
+- banco indisponível;
+- fixture quebrada;
+- configuração incorreta;
+- exceção inesperada durante a preparação.
+
+### O que significa `assert`?
+
+O `assert` representa uma expectativa do teste.
+
+Por exemplo:
+
+```python
+assert usuario.nome == "Rodolfo"
+```
+
+Estamos dizendo:
+
+> Eu espero que `usuario.nome` seja igual a `"Rodolfo"`.
+
+Se a condição for verdadeira:
+
+```text
+PASSED
+```
+
+Se for falsa:
+
+```text
+FAILED
+```
+
+### Testes unitários
+
+Testes unitários verificam pequenas unidades do sistema
+de forma isolada.
+
+Exemplo:
+
+```python
+def calcular_desconto(valor):
+    return valor * 0.10
+
+def test_calcular_desconto():
+    assert calcular_desconto(100) == 10
+```
+
+O objetivo é testar uma função, método ou regra específica.
+
+### Testes E2E
+
+E2E significa:
+
+### End-to-End
+
+Nesse tipo de teste verificamos um fluxo mais completo
+da aplicação.
+
+Exemplo:
+
+```text
+Usuário
+↓
+Interface
+↓
+API
+↓
+Service
+↓
+Repository
+↓
+Banco de Dados
+↓
+Resposta
+```
+
+O teste procura validar o comportamento do sistema
+de ponta a ponta.
+
+### Marcadores do pytest
+
+Neste laboratório você pode selecionar:
+
+- **Todos os testes**
+- **Somente unitários**
+- **Somente E2E**
+
+Isso utiliza os marcadores do pytest.
+
+Por exemplo:
+
+```python
+import pytest
+
+@pytest.mark.unit
+def test_somar():
+    assert 2 + 2 == 4
+```
+
+Para executar somente testes marcados como `unit`:
+
+```powershell
+python -m pytest -vv -m unit
+```
+
+Para executar somente os testes `e2e`:
+
+```powershell
+python -m pytest -vv -m e2e
+```
+
+### Por que utilizar testes automatizados?
+
+Testes automatizados ajudam a:
+
+- detectar regressões;
+- validar regras de negócio;
+- reduzir testes manuais repetitivos;
+- identificar problemas mais rapidamente;
+- dar segurança durante refatorações;
+- apoiar integração contínua;
+- melhorar a confiabilidade do software.
+
+⚠️ **Importante:** um teste que passa comprova apenas
+que o cenário definido naquele teste produziu o resultado esperado.
+
+Por isso, qualidade não depende apenas da quantidade de testes,
+mas também da qualidade dos cenários escolhidos.
+"""
     )
 
-    if st.button(
-        f"▶ Executar {titulo}",
-        key=f"btn_{caminho_teste}",
-        use_container_width=True,
-    ):
-        args = [
-            "-m",
-            "pytest",
-            caminho_teste,
-            "-vv",
-            "-s",
-        ]
 
-        result = run_command(
-            python_command(*args),
-            titulo,
-        )
+# ==========================================================
+# SELEÇÃO DOS TESTES
+# ==========================================================
 
-        st.markdown("#### Interpretação")
-        show_pytest_summary(result)
+st.subheader("🎯 Selecione o conjunto de testes")
 
-
-# ============================================================
-# TESTES UNITÁRIOS
-# ============================================================
-
-st.header("1️⃣ Testes unitários")
-
-st.write(
-    "Os testes unitários verificam pequenas partes do código "
-    "de maneira isolada."
+mode = st.radio(
+    "O que executar?",
+    [
+        "Todos os testes",
+        "Somente unitários",
+        "Somente E2E",
+    ],
+    horizontal=True,
 )
 
-st.markdown(
-    """
-A ideia é começar por testes simples e depois avançar para
-regras reais do TechPort.
-"""
-)
+args = [
+    "-m",
+    "pytest",
+    "-vv",
+]
+
+if mode == "Somente unitários":
+    args += [
+        "-m",
+        "unit",
+    ]
+
+elif mode == "Somente E2E":
+    args += [
+        "-m",
+        "e2e",
+    ]
 
 
-# ------------------------------------------------------------
-# TESTE UNITÁRIO 01
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Teste unitário — soma",
-    caminho_teste=(
-        "tests/unit/test_primeiro_teste.py::test_somar"
-    ),
-    descricao=(
-        "Exemplo básico de Arrange, Act e Assert. "
-        "Serve para mostrar um PASSED ou um FAILED simples."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# TESTE UNITÁRIO 02
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Teste unitário — usuário service",
-    caminho_teste=(
-        "tests/unit/test_usuario_service.py"
-    ),
-    descricao=(
-        "Executa os testes unitários relacionados ao serviço "
-        "de usuários."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# TESTE UNITÁRIO 03
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Teste unitário — técnico service",
-    caminho_teste=(
-        "tests/unit/test_tecnico_service.py"
-    ),
-    descricao=(
-        "Executa os testes unitários relacionados ao serviço "
-        "de técnicos."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# TESTE UNITÁRIO 04
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Teste unitário — chamado service",
-    caminho_teste=(
-        "tests/unit/test_chamado_service.py"
-    ),
-    descricao=(
-        "Executa os testes unitários relacionados ao serviço "
-        "de chamados."
-    ),
-)
-
-
-# ============================================================
-# TESTES DE INTEGRAÇÃO COM MYSQL
-# ============================================================
-
-st.divider()
-
-st.header("2️⃣ Testes de integração com MySQL")
-
-st.write(
-    "Aqui o teste deixa de ser isolado e passa a consultar "
-    "o banco de dados real."
-)
-
-
-# ------------------------------------------------------------
-# MYSQL JOIN
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="MySQL — JOIN chamados da semana",
-    caminho_teste=(
-        "tests/integration/"
-        "test_chamados_mysql.py::"
-        "test_chamados_abertos_na_semana_com_usuario_e_tecnico"
-    ),
-    descricao=(
-        "Executa JOIN entre chamados, usuários e técnicos "
-        "para consultar registros da semana."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# REGRA QUE DEVE PASSAR
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Regra de negócio — usuário válido",
-    caminho_teste=(
-        "tests/integration/"
-        "test_chamados_mysql.py::"
-        "test_todo_chamado_deve_possuir_usuario_valido"
-    ),
-    descricao=(
-        "Valida a regra de que todo chamado deve possuir "
-        "um usuário válido."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# REGRA QUE PODE FALHAR
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Regra de negócio — chamado deve ter técnico",
-    caminho_teste=(
-        "tests/integration/"
-        "test_chamados_mysql.py::"
-        "test_todo_chamado_da_semana_deve_ter_tecnico"
-    ),
-    descricao=(
-        "Regra proposital para demonstrar um FAILED quando "
-        "existirem chamados da semana sem técnico."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# LISTAGEM DOS REGISTROS QUE QUEBRAM A REGRA
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Diagnóstico — listar chamados sem técnico",
-    caminho_teste=(
-        "tests/integration/"
-        "test_chamados_mysql.py::"
-        "test_listar_chamados_da_semana_sem_tecnico"
-    ),
-    descricao=(
-        "Lista exatamente quais chamados estão quebrando "
-        "a regra de negócio."
-    ),
-)
-
-
-st.divider()
-
-
-# ------------------------------------------------------------
-# PRIORIDADE
-# ------------------------------------------------------------
-
-executar_teste(
-    titulo="Regra de negócio — prioridade válida",
-    caminho_teste=(
-        "tests/integration/"
-        "test_chamados_mysql.py::"
-        "test_prioridade_dos_chamados_deve_ser_valida"
-    ),
-    descricao=(
-        "Verifica se os chamados possuem somente prioridades "
-        "permitidas pela regra de negócio."
-    ),
-)
-
-
-# ============================================================
-# TESTE E2E
-# ============================================================
-
-st.divider()
-
-st.header("3️⃣ Teste E2E")
-
-st.write(
-    "O E2E testa o fluxo de ponta a ponta, com a aplicação "
-    "realmente em execução."
-)
-
-st.warning(
-    "Antes de executar o E2E, confirme que a FastAPI está ativa "
-    "em outro terminal."
-)
-
-st.code(
-    "python -m uvicorn app.api.fastapi_app:app --reload",
-    language="powershell",
-)
-
-st.code(
-    '$env:TECHPORT_E2E_URL="http://127.0.0.1:8000"',
-    language="powershell",
-)
-
-executar_teste(
-    titulo="E2E — API em execução",
-    caminho_teste=(
-        "tests/e2e/test_api_em_execucao.py"
-    ),
-    descricao=(
-        "Executa um teste real contra a API em execução."
-    ),
-)
-
-
-# ============================================================
-# EXECUTAR TODOS
-# ============================================================
-
-st.divider()
-
-st.header("4️⃣ Executar todos os testes")
-
-st.write(
-    "Depois de analisar cada teste separadamente, "
-    "execute a suíte completa."
-)
-
-st.code(
-    "python -m pytest -vv -s",
-    language="powershell",
-)
+# ==========================================================
+# EXECUÇÃO DO PYTEST
+# ==========================================================
 
 if st.button(
-    "▶ Executar todos os testes",
+    "▶ Executar pytest",
     type="primary",
     use_container_width=True,
 ):
+
     result = run_command(
-        python_command(
-            "-m",
-            "pytest",
-            "-vv",
-            "-s",
-        ),
-        "Todos os testes",
+        python_command(*args),
+        "pytest",
     )
 
-    st.subheader("Resumo geral")
+    st.subheader("📋 Interpretação do resultado")
+
     show_pytest_summary(result)
 
 
-# ============================================================
+# ==========================================================
 # LEITURA DIDÁTICA
-# ============================================================
+# ==========================================================
 
 st.divider()
 
-st.subheader("📘 Leitura didática")
+st.subheader("📚 Leitura didática")
 
 st.code(
-    """NO TESTS → procurei testes, mas não encontrei
-
-ERROR    → não consegui preparar/executar o teste
-
-FAILED   → executei e encontrei diferença
-
-PASSED   → executei e obtive o esperado
-
-SKIPPED  → o teste existe, mas não foi executado""",
+    """PASSED  → testei e obtive o resultado esperado
+FAILED  → testei e encontrei diferença
+ERROR   → não consegui concluir o teste
+SKIPPED → o teste foi ignorado intencionalmente""",
     language="text",
+)
+
+st.caption(
+    "FAILED e ERROR representam situações diferentes: "
+    "em FAILED o teste foi executado; em ERROR algo impediu "
+    "que a validação fosse concluída."
 )

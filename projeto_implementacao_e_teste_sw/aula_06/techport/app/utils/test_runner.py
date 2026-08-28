@@ -24,6 +24,9 @@ import streamlit as st
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
+# Mantém compatibilidade com as páginas do Streamlit
+PROJECT_ROOT = ROOT_DIR
+
 
 # ============================================================
 # RESULTADO DE UM COMANDO
@@ -658,3 +661,23 @@ def show_environment_info() -> None:
         st.warning(
             "⚠️ O Python atual não parece pertencer à `.venv`."
         )
+
+
+# ============================================================
+# COMPATIBILIDADE COM AS PÁGINAS DO STREAMLIT
+# ============================================================
+
+def show_tool_result(
+    result: CommandResult,
+    success_message: str = "Comando executado com sucesso.",
+    error_message: str = "O comando encontrou problemas.",
+) -> None:
+    """
+    Alias didático para exibir o resultado das ferramentas
+    utilizadas no ambiente de testes.
+    """
+    show_command_result(
+        result,
+        success_message,
+        error_message,
+    )
