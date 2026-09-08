@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratório - Banco World no MySQL Workbench</title>
+  <style>
+    :root{
+      --azul:#0d3b66;
+      --azul2:#145da0;
+      --ciano:#2aa7c9;
+      --claro:#f4f8fb;
+      --branco:#ffffff;
+      --cinza:#5f6b76;
+      --texto:#1f2937;
+      --verde:#1f8f5f;
+      --laranja:#f59e0b;
+      --borda:#dbe5ec;
+      --sombra:0 10px 30px rgba(13,59,102,.10);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Segoe UI, Arial, sans-serif;
+      color:var(--texto);
+      background:linear-gradient(180deg,#eef5f9 0%, #ffffff 55%, #f5f8fa 100%);
+      line-height:1.6;
+    }
+    .topo{
+      background:
+        radial-gradient(circle at 85% 20%, rgba(42,167,201,.20), transparent 28%),
+        linear-gradient(135deg,var(--azul),#082b49 70%);
+      color:#fff;
+      padding:64px 24px 56px;
+    }
+    .wrap{max-width:1180px;margin:auto}
+    .badge{
+      display:inline-block;
+      padding:7px 12px;
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:999px;
+      font-size:.85rem;
+      background:rgba(255,255,255,.08);
+      margin-bottom:16px;
+    }
+    h1{font-size:clamp(2.1rem,5vw,4rem);line-height:1.05;margin:0 0 18px}
+    .sub{font-size:1.15rem;max-width:760px;color:#d7e6ef}
+    .prof{
+      margin-top:28px;
+      display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+    }
+    .prof strong{font-size:1.05rem}
+    .links a,.btn{
+      text-decoration:none;color:#fff;border:1px solid rgba(255,255,255,.3);
+      padding:9px 13px;border-radius:10px;display:inline-block;margin-right:8px;
+      transition:.2s;background:rgba(255,255,255,.07)
+    }
+    .links a:hover,.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.14)}
+    main{padding:40px 24px 70px}
+    .intro{
+      background:#fff;border:1px solid var(--borda);border-radius:18px;
+      padding:26px;box-shadow:var(--sombra);margin-top:-22px;margin-bottom:28px;
+    }
+    .intro h2{margin-top:0;color:var(--azul)}
+    .grid{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin:24px 0;
+    }
+    @media(max-width:800px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:#fff;border:1px solid var(--borda);border-radius:18px;
+      padding:24px;box-shadow:var(--sombra)
+    }
+    .step{
+      width:42px;height:42px;border-radius:12px;background:var(--azul);
+      color:#fff;display:flex;align-items:center;justify-content:center;
+      font-weight:700;margin-bottom:14px;
+    }
+    h2,h3{color:var(--azul)}
+    .callout{
+      border-left:5px solid var(--ciano);background:#eef9fc;
+      padding:14px 16px;border-radius:10px;margin:16px 0;
+    }
+    .warn{border-left-color:var(--laranja);background:#fff8e8}
+    .ok{border-left-color:var(--verde);background:#eefaf5}
+    code{
+      font-family:Consolas,monospace;background:#eef2f5;padding:2px 6px;border-radius:6px
+    }
+    pre{
+      background:#0d1b2a;color:#e7edf3;padding:18px;border-radius:14px;
+      overflow:auto;border:1px solid #213448;
+    }
+    .section-title{margin-top:42px}
+    .checklist{list-style:none;padding:0}
+    .checklist li{
+      padding:10px 0 10px 34px;position:relative;border-bottom:1px dashed #e2e8ee;
+    }
+    .checklist li:before{
+      content:"✓";position:absolute;left:0;top:10px;width:22px;height:22px;
+      border-radius:50%;background:#e7f7ef;color:var(--verde);
+      display:flex;align-items:center;justify-content:center;font-weight:bold;
+    }
+    .flow{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;
+      margin:22px 0
+    }
+    .pill{
+      padding:12px 16px;border-radius:999px;background:#fff;border:1px solid var(--borda);
+      box-shadow:0 4px 14px rgba(0,0,0,.05);font-weight:600
+    }
+    .arrow{font-size:1.4rem;color:var(--azul2)}
+    table{width:100%;border-collapse:collapse;margin-top:15px}
+    th,td{padding:12px 14px;border-bottom:1px solid var(--borda);text-align:left}
+    th{background:#edf5f9;color:var(--azul)}
+    .footer{
+      background:#0d1b2a;color:#ccd7df;padding:32px 24px;text-align:center
+    }
+    .footer a{color:#8fd3e6}
+    .mini{font-size:.92rem;color:var(--cinza)}
+    .cta{
+      display:inline-block;background:var(--azul2);color:#fff;text-decoration:none;
+      padding:11px 16px;border-radius:10px;font-weight:600;margin-top:8px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <span class="badge">Banco de Dados e Mineração de Dados</span>
+    <h1>Instalação do banco <em>World</em> no MySQL Workbench</h1>
+    <p class="sub">
+      Guia prático para baixar o banco de exemplo oficial do MySQL, extrair o arquivo
+      <strong>world.sql</strong>, executá-lo no MySQL Workbench e validar a instalação.
+    </p>
+    <div class="prof">
+      <strong>Professor Rodolfo Terra</strong>
+      <div class="links">
+        <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/rodolffoterra" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section class="intro">
+      <h2>Objetivo do laboratório</h2>
+      <p>
+        Ao final deste passo a passo, você terá o banco <strong>world</strong> disponível no MySQL
+        e poderá começar a praticar comandos SQL utilizando as tabelas
+        <code>city</code>, <code>country</code> e <code>countrylanguage</code>.
+      </p>
+      <div class="flow">
+        <span class="pill">Site MySQL</span><span class="arrow">→</span>
+        <span class="pill">Download ZIP</span><span class="arrow">→</span>
+        <span class="pill">Extrair</span><span class="arrow">→</span>
+        <span class="pill">world.sql</span><span class="arrow">→</span>
+        <span class="pill">MySQL Workbench</span><span class="arrow">→</span>
+        <span class="pill">Executar</span>
+      </div>
+    </section>
+
+    <h2 class="section-title">Passo a passo</h2>
+
+    <div class="grid">
+      <section class="card">
+        <div class="step">1</div>
+        <h3>Acesse a página oficial do MySQL</h3>
+        <p>Abra o navegador e acesse a página de documentação e bancos de exemplo:</p>
+        <a class="cta" href="https://dev.mysql.com/doc/index-other.html" target="_blank">
+          Abrir página oficial
+        </a>
+        <div class="callout">
+          Procure pela seção <strong>Example Databases</strong>.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step">2</div>
+        <h3>Localize o World Database</h3>
+        <p>
+          Na tabela de bancos de exemplo, encontre a linha <strong>world database</strong>.
+          Nessa linha existem opções de download.
+        </p>
+        <div class="callout ok">
+          Para este laboratório, selecione a opção <strong>Zip</strong>.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step">3</div>
+        <h3>Baixe o arquivo ZIP</h3>
+        <p>
+          Clique em <strong>Zip</strong> e salve o arquivo em uma pasta conhecida,
+          como <strong>Downloads</strong> ou em uma pasta da disciplina.
+        </p>
+        <p class="mini">Exemplo de nome: <code>world-db.zip</code></p>
+      </section>
+
+      <section class="card">
+        <div class="step">4</div>
+        <h3>Extraia o conteúdo</h3>
+        <p>No Windows:</p>
+        <ol>
+          <li>Localize o arquivo ZIP.</li>
+          <li>Clique com o botão direito.</li>
+          <li>Escolha <strong>Extrair tudo...</strong>.</li>
+          <li>Selecione a pasta de destino.</li>
+          <li>Clique em <strong>Extrair</strong>.</li>
+        </ol>
+        <div class="callout">
+          Dentro da pasta extraída, localize o arquivo <strong>world.sql</strong>.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step">5</div>
+        <h3>Abra o MySQL Workbench</h3>
+        <ol>
+          <li>Inicie o <strong>MySQL Workbench</strong>.</li>
+          <li>Abra sua conexão local.</li>
+          <li>Informe a senha do usuário, caso solicitado.</li>
+          <li>Aguarde o editor SQL ser carregado.</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <div class="step">6</div>
+        <h3>Abra o arquivo world.sql</h3>
+        <p>No menu superior do Workbench, utilize:</p>
+        <pre>File
+→ Open SQL Script...
+→ selecione world.sql
+→ Open</pre>
+        <p>O script será carregado em uma nova aba do editor SQL.</p>
+      </section>
+
+      <section class="card">
+        <div class="step">7</div>
+        <h3>Execute o script</h3>
+        <p>
+          Com o arquivo aberto, clique no ícone do <strong>raio ⚡</strong>
+          para executar o script completo.
+        </p>
+        <div class="callout warn">
+          Aguarde o término da execução antes de fechar a aba.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="step">8</div>
+        <h3>Atualize os Schemas</h3>
+        <p>
+          No painel esquerdo do Workbench, em <strong>SCHEMAS</strong>,
+          clique no botão de atualização.
+        </p>
+        <p>O banco <strong>world</strong> deverá aparecer na lista.</p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Validação da instalação</h2>
+      <p>Depois de executar o arquivo, abra uma nova aba SQL e rode:</p>
+      <pre>SHOW DATABASES;
+
+USE world;
+
+SHOW TABLES;</pre>
+
+      <p>Você deverá encontrar as seguintes tabelas:</p>
+      <table>
+        <thead>
+          <tr><th>Tabela</th><th>Conteúdo principal</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>city</code></td><td>Cidades, população e país associado.</td></tr>
+          <tr><td><code>country</code></td><td>Países, continentes, população, território e indicadores.</td></tr>
+          <tr><td><code>countrylanguage</code></td><td>Idiomas utilizados em cada país.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card" style="margin-top:22px">
+      <h2>Primeiro teste com os dados</h2>
+      <p>Execute algumas consultas simples:</p>
+      <pre>USE world;
+
+SELECT * 
+FROM city
+LIMIT 10;
+
+SELECT *
+FROM country
+LIMIT 10;
+
+SELECT *
+FROM countrylanguage
+LIMIT 10;</pre>
+    </section>
+
+    <section class="card" style="margin-top:22px">
+      <h2>Consultas de conferência</h2>
+      <p>Também podemos verificar a quantidade de registros:</p>
+      <pre>SELECT COUNT(*) AS quantidade_cidades
+FROM city;
+
+SELECT COUNT(*) AS quantidade_paises
+FROM country;
+
+SELECT COUNT(*) AS quantidade_idiomas
+FROM countrylanguage;</pre>
+    </section>
+
+    <section class="card" style="margin-top:22px">
+      <h2>Checklist do aluno</h2>
+      <ul class="checklist">
+        <li>Acessei a página oficial do MySQL.</li>
+        <li>Localizei a seção <strong>Example Databases</strong>.</li>
+        <li>Baixei o <strong>world database</strong> em formato ZIP.</li>
+        <li>Extraí o conteúdo do arquivo ZIP.</li>
+        <li>Localizei o arquivo <strong>world.sql</strong>.</li>
+        <li>Abri o arquivo no MySQL Workbench.</li>
+        <li>Executei o script completo.</li>
+        <li>Atualizei o painel de SCHEMAS.</li>
+        <li>Visualizei o banco <strong>world</strong>.</li>
+        <li>Consultei as tabelas <code>city</code>, <code>country</code> e <code>countrylanguage</code>.</li>
+      </ul>
+    </section>
+
+    <section class="card" style="margin-top:22px">
+      <h2>Pronto para a aula</h2>
+      <p>
+        Com o banco <strong>World</strong> instalado, vamos utilizar SQL para transformar dados
+        armazenados em informações: consultar, filtrar, ordenar, agregar e relacionar dados
+        para responder perguntas sobre cidades, países, continentes, população e idiomas.
+      </p>
+      <div class="callout ok">
+        <strong>Próximo passo:</strong> começar pela estrutura <code>SELECT ... FROM ...</code>.
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <strong>Professor Rodolfo Terra</strong><br>
+  Banco de Dados e Mineração de Dados<br><br>
+  <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank">LinkedIn</a>
+  &nbsp;•&nbsp;
+  <a href="https://github.com/rodolffoterra" target="_blank">GitHub</a>
+</footer>
+
+</body>
+</html>

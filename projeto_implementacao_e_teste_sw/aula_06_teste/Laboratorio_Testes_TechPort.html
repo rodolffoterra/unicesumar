@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratório de Testes com Python | TechPort</title>
+  <style>
+    :root{
+      --azul:#0057b8;
+      --azul2:#0b2e59;
+      --azulClaro:#eaf3ff;
+      --verde:#198754;
+      --vermelho:#c62828;
+      --amarelo:#b7791f;
+      --cinza:#f4f6f8;
+      --texto:#1f2937;
+      --borda:#dbe3ea;
+      --preto:#111827;
+    }
+
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;
+      font-family:Segoe UI, Arial, sans-serif;
+      color:var(--texto);
+      background:#fff;
+      line-height:1.6;
+    }
+
+    header{
+      background:linear-gradient(135deg,var(--azul2),var(--azul));
+      color:#fff;
+      padding:54px 24px 44px;
+    }
+
+    .container{
+      max-width:1180px;
+      margin:0 auto;
+    }
+
+    .topline{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:42px;
+      line-height:1.1;
+    }
+
+    .subtitle{
+      font-size:20px;
+      opacity:.95;
+      margin-bottom:18px;
+    }
+
+    .meta{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .pill{
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:14px;
+    }
+
+    .profile{
+      min-width:300px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.24);
+      border-radius:16px;
+      padding:18px;
+    }
+
+    .profile strong{display:block;font-size:18px;margin-bottom:6px;}
+    .profile a{
+      color:#fff;
+      text-decoration:none;
+      display:block;
+      margin:5px 0;
+    }
+    .profile a:hover{text-decoration:underline;}
+
+    nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:#fff;
+      border-bottom:1px solid var(--borda);
+      box-shadow:0 2px 10px rgba(0,0,0,.04);
+    }
+
+    nav .container{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      padding:10px 0;
+    }
+
+    nav a{
+      color:var(--azul2);
+      text-decoration:none;
+      padding:8px 11px;
+      border-radius:8px;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    nav a:hover{
+      background:var(--azulClaro);
+    }
+
+    main{
+      padding:32px 20px 60px;
+    }
+
+    section{
+      margin:0 0 42px;
+      scroll-margin-top:80px;
+    }
+
+    h2{
+      font-size:30px;
+      color:var(--azul2);
+      margin:0 0 14px;
+      border-left:5px solid var(--azul);
+      padding-left:13px;
+    }
+
+    h3{
+      color:var(--azul2);
+      margin-top:24px;
+      margin-bottom:8px;
+    }
+
+    .card{
+      border:1px solid var(--borda);
+      border-radius:16px;
+      padding:20px;
+      background:#fff;
+      margin:14px 0;
+      box-shadow:0 4px 16px rgba(0,0,0,.04);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:16px;
+    }
+
+    .info{background:var(--azulClaro);border-left:5px solid var(--azul);}
+    .ok{background:#ecf8f1;border-left:5px solid var(--verde);}
+    .warn{background:#fff8e6;border-left:5px solid var(--amarelo);}
+    .error{background:#fff0f0;border-left:5px solid var(--vermelho);}
+
+    pre{
+      background:#0f172a;
+      color:#e5edf7;
+      padding:18px;
+      border-radius:12px;
+      overflow:auto;
+      font-family:Consolas, "Courier New", monospace;
+      font-size:14px;
+      border:1px solid #25334b;
+    }
+
+    code.inline{
+      background:#edf2f7;
+      padding:2px 6px;
+      border-radius:5px;
+      font-family:Consolas, monospace;
+    }
+
+    .flow{
+      font-family:Consolas, monospace;
+      background:var(--cinza);
+      border:1px dashed #b8c5d1;
+      padding:18px;
+      border-radius:12px;
+      white-space:pre-wrap;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px;
+    }
+
+    th,td{
+      border:1px solid var(--borda);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+
+    th{
+      background:var(--azulClaro);
+      color:var(--azul2);
+    }
+
+    .step{
+      display:flex;
+      gap:14px;
+      margin:18px 0;
+    }
+
+    .stepnum{
+      flex:0 0 38px;
+      height:38px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      background:var(--azul);
+      font-weight:700;
+    }
+
+    .small{
+      color:#5f6b78;
+      font-size:14px;
+    }
+
+    .highlight{
+      font-size:20px;
+      font-weight:700;
+      color:var(--azul2);
+    }
+
+    footer{
+      background:var(--azul2);
+      color:#fff;
+      padding:28px 20px;
+      text-align:center;
+    }
+
+    @media (max-width:700px){
+      h1{font-size:34px;}
+      nav{position:static;}
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container topline">
+    <div>
+      <h1>Laboratório de Testes de Software com Python</h1>
+      <div class="subtitle">Do código funcionando ao código confiável — Projeto TechPort</div>
+
+      <div class="meta">
+        <div class="pill">Disciplina: Projeto, Implementação e Teste de Software</div>
+        <div class="pill">Projeto: TechPort</div>
+        <div class="pill">Aula prática de Testes de Software</div>
+      </div>
+    </div>
+
+    <div class="profile">
+      <strong>Professor Rodolfo Terra</strong>
+      <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank">LinkedIn: linkedin.com/in/rodolffoterra</a>
+      <a href="https://github.com/rodolffoterra" target="_blank">GitHub: github.com/rodolffoterra</a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container">
+    <a href="#objetivo">Objetivo</a>
+    <a href="#ambiente">Ambiente</a>
+    <a href="#pytest">pytest</a>
+    <a href="#coverage">Coverage</a>
+    <a href="#ruff">Ruff</a>
+    <a href="#mypy">mypy</a>
+    <a href="#bandit">Bandit</a>
+    <a href="#pipaudit">pip-audit</a>
+    <a href="#fluxo">Fluxo final</a>
+  </div>
+</nav>
+
+<main class="container">
+
+  <section id="objetivo">
+    <h2>Objetivo do laboratório</h2>
+
+    <div class="card info">
+      Nesta prática vamos executar, pelo terminal, diferentes ferramentas de teste e qualidade
+      utilizadas no ecossistema Python. O objetivo não é apenas “rodar comandos”, mas aprender
+      a interpretar o que cada resultado significa.
+    </div>
+
+    <div class="flow">TechPort
+   ↓
+Código
+   ↓
+Testes
+   ↓
+Análise
+   ↓
+Evidências
+   ↓
+Qualidade</div>
+  </section>
+
+  <section id="ambiente">
+    <h2>1. Preparar o ambiente</h2>
+
+    <div class="step">
+      <div class="stepnum">1</div>
+      <div>
+        <h3>Entre na pasta do projeto</h3>
+        <pre>cd techport</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="stepnum">2</div>
+      <div>
+        <h3>Ative a .venv</h3>
+        <pre>.\.venv\Scripts\Activate.ps1</pre>
+        <p>Ao ativar corretamente, o terminal deve mostrar algo parecido com:</p>
+        <pre>(.venv) PS C:\...\techport&gt;</pre>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="stepnum">3</div>
+      <div>
+        <h3>Confirme qual Python está sendo usado</h3>
+        <pre>python -c "import sys; print(sys.executable)"</pre>
+        <div class="card ok">
+          O resultado deve apontar para o Python localizado dentro de
+          <code class="inline">.venv\Scripts\python.exe</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="stepnum">4</div>
+      <div>
+        <h3>Instale todas as dependências</h3>
+        <pre>python -m pip install -r requirements.txt</pre>
+        <p>Assim instalamos, de uma única vez, as bibliotecas da aplicação e as ferramentas de teste.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pytest">
+    <h2>2. pytest — Testes automatizados</h2>
+
+    <p class="highlight">Pergunta principal: o comportamento obtido é igual ao comportamento esperado?</p>
+
+    <pre>python -m pytest -vv -s</pre>
+
+    <div class="grid">
+      <div class="card ok">
+        <strong>PASSED</strong>
+        <p>O teste executou e o resultado obtido foi igual ao esperado.</p>
+      </div>
+
+      <div class="card error">
+        <strong>FAILED</strong>
+        <p>O teste executou, mas o resultado obtido foi diferente do esperado.</p>
+      </div>
+
+      <div class="card warn">
+        <strong>ERROR</strong>
+        <p>O teste não conseguiu ser preparado ou executado corretamente.</p>
+      </div>
+
+      <div class="card info">
+        <strong>SKIPPED</strong>
+        <p>O teste existe, mas foi ignorado naquela execução.</p>
+      </div>
+    </div>
+
+    <h3>Exemplo de teste simples</h3>
+    <pre>import pytest
+
+@pytest.mark.unit
+def test_somar():
+    # Arrange
+    a = 2
+    b = 3
+
+    # Act
+    resultado = a + b
+
+    # Assert
+    assert resultado == 5</pre>
+
+    <h3>Exemplo de regra de negócio com MySQL</h3>
+
+    <div class="card info">
+      Regra usada na aula: todo chamado da semana deveria possuir técnico atribuído.
+    </div>
+
+    <pre>SELECT
+    COUNT(*) AS quantidade
+FROM chamados
+WHERE
+    YEARWEEK(data_abertura, 1) = YEARWEEK(CURDATE(), 1)
+    AND tecnico_id IS NULL;</pre>
+
+    <div class="flow">Esperado = 0 chamados sem técnico
+Obtido   = 9 chamados sem técnico
+
+9 ≠ 0
+  ↓
+FAILED</div>
+
+    <div class="card error">
+      Exemplo de mensagem:
+      <pre>AssertionError: Foram encontrados 9 chamado(s) sem técnico.
+assert 9 == 0</pre>
+    </div>
+  </section>
+
+  <section id="coverage">
+    <h2>3. Cobertura de testes — pytest-cov</h2>
+
+    <p class="highlight">Pergunta principal: quanto do código foi exercitado pelos testes?</p>
+
+    <pre>python -m pytest --cov=app --cov-report=term-missing</pre>
+
+    <table>
+      <tr>
+        <th>Coluna</th>
+        <th>Significado</th>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>Arquivo analisado.</td>
+      </tr>
+      <tr>
+        <td>Stmts</td>
+        <td>Quantidade de instruções executáveis.</td>
+      </tr>
+      <tr>
+        <td>Miss</td>
+        <td>Quantidade de instruções não executadas pelos testes.</td>
+      </tr>
+      <tr>
+        <td>Cover</td>
+        <td>Percentual de cobertura.</td>
+      </tr>
+      <tr>
+        <td>Missing</td>
+        <td>Linhas que não foram alcançadas pelos testes.</td>
+      </tr>
+    </table>
+
+    <h3>Exemplo</h3>
+
+    <pre>app\core\config.py      13     0   100%
+app\core\security.py    10     2    80%   12, 17
+app\api\routes.py       93    93     0%   1-513
+TOTAL                 1012   958     5%</pre>
+
+    <div class="card warn">
+      <strong>Importante:</strong> 100% de cobertura não significa 100% de qualidade.
+      Cobertura indica que linhas foram executadas, não que todas as regras estejam corretas.
+    </div>
+
+    <div class="flow">TESTES
+66,7% de sucesso
+        ≠
+COBERTURA
+5% do código</div>
+  </section>
+
+  <section id="ruff">
+    <h2>4. Ruff — Qualidade do código</h2>
+
+    <p class="highlight">Pergunta principal: existem problemas de qualidade detectáveis estaticamente?</p>
+
+    <pre>python -m ruff check .</pre>
+
+    <p>O Ruff analisa o código sem executar a aplicação.</p>
+
+    <h3>Exemplo de resultado</h3>
+    <pre>app/main.py:10:1: F401 `os` imported but unused</pre>
+
+    <table>
+      <tr><th>Parte</th><th>Significado</th></tr>
+      <tr><td>app/main.py</td><td>Arquivo onde o problema foi encontrado.</td></tr>
+      <tr><td>10</td><td>Linha.</td></tr>
+      <tr><td>1</td><td>Coluna.</td></tr>
+      <tr><td>F401</td><td>Código da regra.</td></tr>
+      <tr><td>imported but unused</td><td>Descrição do problema.</td></tr>
+    </table>
+
+    <div class="card info">
+      Ruff é uma ferramenta de análise estática. Ele ajuda a encontrar problemas cedo,
+      antes de executar ou entregar a aplicação.
+    </div>
+  </section>
+
+  <section id="mypy">
+    <h2>5. mypy — Validação de tipos</h2>
+
+    <p class="highlight">Pergunta principal: os tipos declarados e utilizados são coerentes?</p>
+
+    <pre>python -m mypy app</pre>
+
+    <h3>Exemplo</h3>
+
+    <pre>def calcular_idade() -> int:
+    return "30"</pre>
+
+    <div class="flow">Declarado
+int
+ ↓
+Retorno real
+str
+ ↓
+Incompatibilidade</div>
+
+    <h3>Exemplo de mensagem</h3>
+    <pre>error: Incompatible return value type
+(got "str", expected "int") [return-value]</pre>
+
+    <table>
+      <tr><th>Termo</th><th>Interpretação</th></tr>
+      <tr><td>expected</td><td>Tipo que o código declarou como esperado.</td></tr>
+      <tr><td>got</td><td>Tipo que o mypy encontrou.</td></tr>
+      <tr><td>return-value</td><td>Categoria do problema.</td></tr>
+    </table>
+
+    <div class="card warn">
+      Passar no mypy não significa que a regra de negócio está correta.
+      O mypy verifica tipos, enquanto pytest verifica comportamento.
+    </div>
+  </section>
+
+  <section id="bandit">
+    <h2>6. Bandit — Segurança SAST</h2>
+
+    <p class="highlight">Pergunta principal: existem padrões potencialmente inseguros no código?</p>
+
+    <pre>python -m bandit -r app</pre>
+
+    <div class="flow">Código Python
+   ↓
+Bandit
+   ↓
+SAST
+   ↓
+Achados de segurança</div>
+
+    <h3>Como interpretar um achado</h3>
+
+    <pre>&gt;&gt; Issue: [B602:subprocess_popen_with_shell_equals_true]
+Severity: HIGH
+Confidence: HIGH
+CWE: CWE-78
+Location: app/utils/exemplo.py:20:4</pre>
+
+    <table>
+      <tr><th>Campo</th><th>Significado</th></tr>
+      <tr><td>B602</td><td>Regra de segurança acionada.</td></tr>
+      <tr><td>Severity</td><td>Impacto potencial.</td></tr>
+      <tr><td>Confidence</td><td>Confiança da ferramenta no achado.</td></tr>
+      <tr><td>CWE</td><td>Categoria padronizada de fraqueza.</td></tr>
+      <tr><td>Location</td><td>Arquivo e linha para investigação.</td></tr>
+    </table>
+
+    <div class="card warn">
+      Um achado do Bandit não é automaticamente uma vulnerabilidade confirmada.
+      Ele indica um padrão que deve ser analisado no contexto do código.
+    </div>
+  </section>
+
+  <section id="pipaudit">
+    <h2>7. pip-audit — Segurança das dependências</h2>
+
+    <p class="highlight">Pergunta principal: alguma biblioteca instalada possui vulnerabilidade conhecida?</p>
+
+    <pre>python -m pip_audit</pre>
+
+    <div class="flow">Dependências
+     ↓
+Versões instaladas
+     ↓
+pip-audit
+     ↓
+Base de vulnerabilidades
+     ↓
+SCA</div>
+
+    <h3>Exemplo real obtido no laboratório</h3>
+
+    <pre>Found 43 known vulnerabilities in 13 packages</pre>
+
+    <div class="card error">
+      Isso significa 43 vulnerabilidades conhecidas distribuídas em 13 pacotes.
+      Não significa 43 bibliotecas e não significa que o TechPort foi invadido.
+    </div>
+
+    <h3>Exemplo de linha</h3>
+
+    <pre>requests  2.32.5  PYSEC-2026-2275  2.33.0</pre>
+
+    <table>
+      <tr><th>Campo</th><th>Significado</th></tr>
+      <tr><td>requests</td><td>Pacote afetado.</td></tr>
+      <tr><td>2.32.5</td><td>Versão instalada.</td></tr>
+      <tr><td>PYSEC-2026-2275</td><td>Identificador da vulnerabilidade conhecida.</td></tr>
+      <tr><td>2.33.0</td><td>Versão indicada com correção.</td></tr>
+    </table>
+
+    <h3>Cuidados com atualização</h3>
+
+    <div class="card warn">
+      Nem toda dependência deve ser atualizada isoladamente. Exemplo: FastAPI depende de Starlette.
+      Atualizar Starlette para uma versão incompatível pode quebrar a aplicação.
+    </div>
+
+    <div class="flow">Identificar pacote
+      ↓
+Ver versão instalada
+      ↓
+Ver vulnerabilidade
+      ↓
+Ver Fix Version
+      ↓
+Verificar compatibilidade
+      ↓
+Atualizar
+      ↓
+Executar pytest
+      ↓
+Executar pip-audit novamente</div>
+  </section>
+
+  <section id="fluxo">
+    <h2>8. Fluxo completo do laboratório</h2>
+
+    <pre>python -m pytest -vv -s
+
+python -m pytest --cov=app --cov-report=term-missing
+
+python -m ruff check .
+
+python -m mypy app
+
+python -m bandit -r app
+
+python -m pip_audit</pre>
+
+    <div class="flow">PYTEST
+   ↓
+comportamento
+
+PYTEST-COV
+   ↓
+cobertura
+
+RUFF
+   ↓
+qualidade do código
+
+MYPY
+   ↓
+tipagem
+
+BANDIT
+   ↓
+segurança do código
+
+PIP-AUDIT
+   ↓
+segurança das dependências</div>
+
+    <div class="card ok">
+      <strong>Mensagem final da aula:</strong><br><br>
+      Qualidade não é algo que verificamos apenas no final. Qualidade é construída durante
+      todo o desenvolvimento, por meio de testes, análise estática, segurança, cobertura e
+      revisão contínua.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <strong>Professor Rodolfo Terra</strong><br>
+    Disciplina: Projeto, Implementação e Teste de Software<br>
+    Projeto TechPort<br><br>
+    LinkedIn: linkedin.com/in/rodolffoterra &nbsp; | &nbsp;
+    GitHub: github.com/rodolffoterra
+  </div>
+</footer>
+
+</body>
+</html>

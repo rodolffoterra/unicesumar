@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratório - API TechPort com FastAPI e MySQL</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #1d4ed8;
+      --secondary: #0f766e;
+      --accent: #7c3aed;
+      --border: #dbe3ef;
+      --code-bg: #111827;
+      --code-text: #f9fafb;
+      --ok: #166534;
+      --warn: #92400e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 48px 24px;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 { margin-top: 0; }
+
+    h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    h2 { color: var(--primary); margin-bottom: 12px; }
+    h3 { color: var(--secondary); margin-bottom: 8px; }
+
+    .subtitle {
+      font-size: 1.15rem;
+      opacity: 0.95;
+      margin-bottom: 20px;
+    }
+
+    .professor {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.98rem;
+    }
+
+    .professor a {
+      color: #dbeafe;
+      text-decoration: none;
+    }
+
+    main { padding: 32px 0 56px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    }
+
+    .step-number {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 10px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid #334155;
+    }
+
+    .flow {
+      background: #eff6ff;
+      border-left: 5px solid var(--primary);
+      padding: 16px;
+      border-radius: 8px;
+      font-family: Consolas, Monaco, monospace;
+      white-space: pre-wrap;
+    }
+
+    .success {
+      background: #f0fdf4;
+      border-left: 5px solid var(--ok);
+      padding: 14px 16px;
+      border-radius: 8px;
+    }
+
+    .warning {
+      background: #fffbeb;
+      border-left: 5px solid var(--warn);
+      padding: 14px 16px;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: #eef2ff; }
+
+    .checklist li { margin-bottom: 8px; }
+
+    footer {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 24px;
+      text-align: center;
+    }
+
+    footer a { color: #bfdbfe; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Laboratório Final — API TechPort</h1>
+      <div class="subtitle">FastAPI + Swagger + MySQL — criação, consulta, alteração e exclusão de registros</div>
+      <div class="professor">
+        <span><strong>Professor:</strong> Rodolfo Terra</span>
+        <span><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank">linkedin.com/in/rodolffoterra</a></span>
+        <span><strong>GitHub:</strong> <a href="https://github.com/rodolffoterra" target="_blank">github.com/rodolffoterra</a></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <section class="card">
+        <h2>Objetivo do laboratório</h2>
+        <p>Ao final deste laboratório, o aluno deverá ser capaz de executar a API TechPort, acessar o Swagger, criar um usuário pela API, validar a persistência no MySQL, consultar o registro criado e, por fim, excluir o mesmo registro pela API.</p>
+        <div class="flow">Swagger → FastAPI → Service → Repository → MySQL</div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">1</span>Entrar na pasta do projeto</h2>
+        <p>No terminal do VS Code, acesse a raiz do projeto <strong>techport</strong>.</p>
+        <pre>cd "C:\Users\rodolfo\Desktop\cesumar\Disciplinas\Projeto, Implementação e Teste de SW\aula_05\techport"</pre>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">2</span>Ativar o ambiente virtual</h2>
+        <p>Se o projeto estiver utilizando uma virtual environment, ative-a antes de iniciar a API.</p>
+        <pre>.\.venv\Scripts\Activate.ps1</pre>
+        <div class="warning"><strong>Observação:</strong> se a pasta da sua virtual environment tiver outro nome, ajuste o comando.</div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">3</span>Iniciar a API</h2>
+        <p>Execute o Uvicorn apontando para a aplicação FastAPI:</p>
+        <pre>python -m uvicorn app.api.fastapi_app:app --reload</pre>
+        <p>Quando aparecer algo semelhante ao conteúdo abaixo, a API estará funcionando:</p>
+        <pre>Uvicorn running on http://127.0.0.1:8000</pre>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">4</span>Acessar o Swagger</h2>
+        <p>Abra o navegador e acesse:</p>
+        <pre>http://127.0.0.1:8000/docs</pre>
+        <p>No Swagger, localize o grupo <strong>Usuários</strong>. Ele deverá apresentar operações como GET, POST, PUT e DELETE.</p>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">5</span>Selecionar o banco TechPort no MySQL</h2>
+        <p>No MySQL Workbench ou em outro cliente MySQL, execute:</p>
+        <pre>USE techport;</pre>
+        <p>Confirme as tabelas existentes:</p>
+        <pre>SHOW TABLES;</pre>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">6</span>Contar quantos usuários existem</h2>
+        <p>Antes de criar um novo registro, conte a quantidade atual de usuários:</p>
+        <pre>SELECT COUNT(*) AS total_usuarios
+FROM usuarios;</pre>
+        <div class="success">Anote o valor retornado. Exemplo: <strong>1000 usuários</strong>.</div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">7</span>Visualizar os últimos usuários</h2>
+        <p>Execute uma consulta para visualizar os registros mais recentes:</p>
+        <pre>SELECT
+    id,
+    nome,
+    email,
+    perfil,
+    ativo,
+    data_cadastro
+FROM usuarios
+ORDER BY id DESC
+LIMIT 10;</pre>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">8</span>Criar um novo usuário pelo Swagger</h2>
+        <p>No Swagger, abra:</p>
+        <pre>POST /usuarios</pre>
+        <p>Clique em <strong>Try it out</strong> e utilize um JSON de teste:</p>
+        <pre>{
+  "nome": "Usuario Aula API",
+  "email": "usuario.aula.api@techport.com",
+  "senha_hash": "teste123",
+  "perfil": "cliente",
+  "ativo": true
+}</pre>
+        <p>Depois clique em <strong>Execute</strong>.</p>
+        <p>A resposta esperada será semelhante a:</p>
+        <pre>{
+  "mensagem": "Usuário cadastrado com sucesso.",
+  "id": 1001
+}</pre>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">9</span>Contar novamente no MySQL</h2>
+        <p>Volte ao MySQL e execute:</p>
+        <pre>SELECT COUNT(*) AS total_usuarios
+FROM usuarios;</pre>
+        <p>Se antes existiam 1000 registros, agora deverá aparecer 1001.</p>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">10</span>Consultar o registro criado no MySQL</h2>
+        <p>Confirme que o registro criado pela API está realmente persistido no banco:</p>
+        <pre>SELECT
+    id,
+    nome,
+    email,
+    perfil,
+    ativo,
+    data_cadastro
+FROM usuarios
+WHERE email = 'usuario.aula.api@techport.com';</pre>
+        <p>Observe que no JSON utilizamos <code>true</code>, enquanto no MySQL o campo <code>tinyint(1)</code> normalmente aparece como <code>1</code>.</p>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">11</span>Consultar o mesmo usuário pela API</h2>
+        <p>No Swagger, abra:</p>
+        <pre>GET /usuarios/{usuario_id}</pre>
+        <p>Informe o ID criado no POST, por exemplo:</p>
+        <pre>1001</pre>
+        <p>A API deverá retornar os dados daquele usuário em formato JSON.</p>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">12</span>Excluir o usuário pelo Swagger</h2>
+        <p>No Swagger, abra:</p>
+        <pre>DELETE /usuarios/{usuario_id}</pre>
+        <p>Informe o mesmo ID utilizado anteriormente e clique em <strong>Execute</strong>.</p>
+        <p>A resposta esperada será:</p>
+        <pre>{
+  "mensagem": "Usuário excluído com sucesso."
+}</pre>
+        <div class="warning"><strong>Atenção:</strong> utilize um usuário criado especificamente para o laboratório. Usuários que já possuem chamados, comentários, histórico ou anexos podem não ser excluídos devido às chaves estrangeiras do banco.</div>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">13</span>Contar novamente após o DELETE</h2>
+        <pre>SELECT COUNT(*) AS total_usuarios
+FROM usuarios;</pre>
+        <p>Se o usuário foi excluído corretamente, a quantidade deverá voltar ao valor inicial.</p>
+      </section>
+
+      <section class="card">
+        <h2><span class="step-number">14</span>Confirmar que o registro foi removido</h2>
+        <pre>SELECT *
+FROM usuarios
+WHERE email = 'usuario.aula.api@techport.com';</pre>
+        <p>O resultado esperado é <strong>zero registros</strong>.</p>
+      </section>
+
+      <section class="card">
+        <h2>Resumo do fluxo realizado</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Etapa</th>
+              <th>Ação</th>
+              <th>Resultado esperado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Contar usuários no MySQL</td><td>Quantidade inicial</td></tr>
+            <tr><td>2</td><td>POST /usuarios</td><td>Novo usuário criado</td></tr>
+            <tr><td>3</td><td>Contar usuários novamente</td><td>Quantidade + 1</td></tr>
+            <tr><td>4</td><td>SELECT pelo e-mail</td><td>Registro encontrado no MySQL</td></tr>
+            <tr><td>5</td><td>GET /usuarios/{id}</td><td>Registro retornado pela API</td></tr>
+            <tr><td>6</td><td>DELETE /usuarios/{id}</td><td>Registro excluído</td></tr>
+            <tr><td>7</td><td>Contar novamente</td><td>Quantidade volta ao valor inicial</td></tr>
+            <tr><td>8</td><td>SELECT pelo e-mail</td><td>Zero registros</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Checklist do laboratório</h2>
+        <ul class="checklist">
+          <li>API iniciada com Uvicorn.</li>
+          <li>Swagger acessível em <code>/docs</code>.</li>
+          <li>Banco <code>techport</code> selecionado.</li>
+          <li>Quantidade inicial de usuários anotada.</li>
+          <li>Novo usuário criado com POST.</li>
+          <li>Usuário encontrado no MySQL.</li>
+          <li>Usuário consultado por GET.</li>
+          <li>Usuário excluído por DELETE.</li>
+          <li>Exclusão confirmada no MySQL.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Conclusão</h2>
+        <p>Neste laboratório foi possível comprovar que o Swagger não trabalha com uma cópia isolada dos dados. As requisições HTTP são processadas pelo FastAPI, passam pelas camadas de serviço e repositório e executam operações reais no banco MySQL.</p>
+        <div class="flow">Swagger → FastAPI → Service → Repository → MySQL → COMMIT</div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <strong>Professor Rodolfo Terra</strong><br />
+      Projeto, Implementação e Teste de Software<br />
+      <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank">LinkedIn</a> ·
+      <a href="https://github.com/rodolffoterra" target="_blank">GitHub</a>
+    </div>
+  </footer>
+</body>
+</html>

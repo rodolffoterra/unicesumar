@@ -580,6 +580,9 @@ e aplicações dos conceitos estudados.
 
   **Aula 06**                         [▶️ Assistir no
                                       YouTube](https://www.youtube.com/watch?v=vUzxFUQwqlE)
+
+  **Aula 07**                         [▶️ Assistir no
+                                      YouTube](https://www.youtube.com/watch?v=cJi-VMGbx78)
   -------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------

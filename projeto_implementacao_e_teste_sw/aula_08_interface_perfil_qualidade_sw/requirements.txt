@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+streamlit
+requests
+pydantic
+mysql-connector-python
+python-dotenv
+cryptography
