@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Warehouse na Prática | Professor Rodolfo Terra</title>
+  <style>
+    :root{
+      --blue:#0b3b66;
+      --blue2:#145d97;
+      --blue3:#eaf4fb;
+      --ink:#17324d;
+      --muted:#60758a;
+      --bg:#f5f8fb;
+      --card:#ffffff;
+      --border:#d9e4ee;
+      --green:#17804a;
+      --red:#b43b3b;
+      --yellow:#fff5d6;
+      --shadow:0 10px 28px rgba(10,49,83,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+      line-height:1.6;
+    }
+    header{
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;
+      padding:48px 20px 42px;
+    }
+    .wrap{max-width:1100px;margin:auto}
+    .badge{
+      display:inline-block;
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.3);
+      padding:6px 12px;border-radius:999px;font-size:.85rem;font-weight:700;
+    }
+    h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;margin:16px 0 10px}
+    header p{max-width:780px;font-size:1.08rem;margin:8px 0}
+    .teacher{margin-top:24px;font-weight:700}
+    .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .links a,.btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:42px;padding:9px 14px;border-radius:10px;text-decoration:none;
+      font-weight:700;border:1px solid transparent;cursor:pointer;
+    }
+    .links a{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.08)}
+    nav{
+      position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--border);
+      overflow-x:auto;white-space:nowrap;
+    }
+    nav .wrap{display:flex;gap:4px;padding:8px 12px}
+    nav a{color:var(--ink);text-decoration:none;padding:9px 12px;border-radius:8px;font-weight:650;font-size:.92rem}
+    nav a:hover{background:var(--blue3);color:var(--blue)}
+    main{padding:28px 20px 60px}
+    section{scroll-margin-top:70px;margin:0 auto 28px}
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:16px;
+      padding:24px;box-shadow:var(--shadow);
+    }
+    h2{font-size:1.7rem;margin:0 0 12px;color:var(--blue)}
+    h3{color:var(--blue);margin-top:20px}
+    .lead{font-size:1.08rem;color:#3f566b}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .mini{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fbfdff}
+    .mini strong{color:var(--blue)}
+    .callout{border-left:5px solid var(--blue2);background:var(--blue3);padding:14px 16px;border-radius:8px;margin:16px 0}
+    .warn{background:var(--yellow);border-left-color:#c38b00}
+    .schema{
+      display:grid;grid-template-columns:1fr 92px 1.15fr 92px 1fr;grid-template-areas:
+      "tempo reltempo fato relproduto produto"
+      ". . cliente . .";gap:12px;align-items:center;margin:26px auto;max-width:980px
+    }
+    .rel{
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      color:var(--blue);font-weight:800;font-size:.88rem;text-align:center
+    }
+    .rel-line{
+      flex:1;height:2px;background:var(--blue2);min-width:24px
+    }
+    .rel .one,.rel .many{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-width:28px;height:28px;border-radius:999px;border:1px solid #9dbbd2;
+      background:#fff
+    }
+    .reltempo{grid-area:reltempo}
+    .relproduto{grid-area:relproduto}
+    .relcliente{
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      color:var(--blue);font-weight:800;font-size:.88rem;text-align:center;
+      margin:8px auto 0;max-width:260px
+    }
+    .table-box{border:2px solid #9dbbd2;background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+    .table-box h4{margin:0 0 8px;color:var(--blue);font-size:1.05rem}
+    .table-box ul{margin:0;padding-left:18px;font-size:.9rem}
+    .tempo{grid-area:tempo}.produto{grid-area:produto}.cliente{grid-area:cliente}
+    .fato{grid-area:fato;border-color:var(--blue2);background:#f0f8ff}
+    .pk{font-weight:800;color:#12683a}.fk{font-weight:800;color:#8b5b00}
+    .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0}
+    .step{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#fff;font-weight:700}
+    .arrow{font-weight:900;color:var(--blue2)}
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
+    .tab-btn{
+      border:1px solid var(--border);background:#fff;color:var(--ink);padding:9px 12px;
+      border-radius:9px;cursor:pointer;font-weight:700
+    }
+    .tab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .tab-panel{display:none}.tab-panel.active{display:block}
+    pre{
+      position:relative;background:#0d1f2d;color:#e9f2f9;padding:18px;border-radius:12px;
+      overflow:auto;font-size:.88rem;line-height:1.55
+    }
+    code{font-family:Consolas,Monaco,monospace}
+    .copy{
+      float:right;margin-bottom:8px;background:#fff;color:var(--blue);border:1px solid var(--border);
+      border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700
+    }
+    table{width:100%;border-collapse:collapse;margin:12px 0;overflow:hidden}
+    th,td{border:1px solid var(--border);padding:10px;text-align:left}
+    th{background:var(--blue3);color:var(--blue)}
+    .quiz-q{border-top:1px solid var(--border);padding-top:18px;margin-top:18px}
+    .option{display:block;margin:8px 0;padding:8px 10px;border:1px solid var(--border);border-radius:9px;background:#fff}
+    .btn{background:var(--blue);color:#fff}
+    .btn.secondary{background:#fff;color:var(--blue);border-color:var(--blue)}
+    #quizResult{margin-top:14px;font-weight:800}
+    details{border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;background:#fff}
+    summary{cursor:pointer;font-weight:750;color:var(--blue)}
+    footer{background:#0d2840;color:#dce9f3;padding:28px 20px;text-align:center}
+    footer a{color:#fff}
+    .checklist label{display:block;padding:8px 0}
+    .progress{height:10px;background:#dfe8ef;border-radius:999px;overflow:hidden;margin:10px 0}
+    .progress span{display:block;height:100%;width:0;background:var(--blue2);transition:.2s}
+    @media(max-width:760px){
+      .grid,.grid4{grid-template-columns:1fr}
+      .schema{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "fato"
+          "reltempo"
+          "tempo"
+          "relproduto"
+          "produto"
+          "cliente"
+      }
+      .rel{max-width:220px;margin:auto}
+      .reltempo .one,.relproduto .one{order:3}
+      .reltempo .many,.relproduto .many{order:1}
+      .reltempo .rel-line,.relproduto .rel-line{order:2}
+      .arrow{transform:rotate(90deg)}
+      .card{padding:18px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <span class="badge">Material Complementar • Banco de Dados e Mineração de Dados</span>
+    <h1>Data Warehouse na Prática</h1>
+    <p>Aprenda a construir um pequeno Data Warehouse utilizando <strong>Modelagem Dimensional</strong>, com <strong>3 dimensões e 1 tabela fato</strong>, seguindo o modelo estrela.</p>
+    <p class="teacher">Professor Rodolfo Terra</p>
+    <div class="links">
+      <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/rodolffoterra" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#objetivo">Objetivo</a>
+    <a href="#conceito">Conceito</a>
+    <a href="#modelo">Modelo Estrela</a>
+    <a href="#sql">SQL</a>
+    <a href="#carga">Carga</a>
+    <a href="#consultas">Consultas</a>
+    <a href="#desafio">Desafio</a>
+    <a href="#quiz">Quiz</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="objetivo" class="card">
+  <h2>1. Objetivo do material</h2>
+  <p class="lead">Ao final, você deverá compreender como transformar dados de um cenário de vendas em uma estrutura própria para análise.</p>
+  <div class="grid4">
+    <div class="mini"><strong>1</strong><br>Entender fato e dimensão</div>
+    <div class="mini"><strong>2</strong><br>Construir um modelo estrela</div>
+    <div class="mini"><strong>3</strong><br>Criar tabelas dimensionais em SQL</div>
+    <div class="mini"><strong>4</strong><br>Executar consultas analíticas</div>
+  </div>
+</section>
+
+<section id="conceito" class="card">
+  <h2>2. O que é um Data Warehouse?</h2>
+  <p>Um <strong>Data Warehouse (DW)</strong> é um ambiente organizado para armazenar dados históricos e apoiar análise, indicadores e tomada de decisão.</p>
+  <div class="grid">
+    <div class="mini">
+      <h3>Banco operacional — OLTP</h3>
+      <p>Otimizado para registrar as operações do dia a dia: pedidos, pagamentos, cadastros e atualizações.</p>
+    </div>
+    <div class="mini">
+      <h3>Data Warehouse — OLAP</h3>
+      <p>Otimizado para consultas, comparações históricas, agregações e análise gerencial.</p>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Ideia central:</strong> o sistema operacional registra o que está acontecendo; o Data Warehouse preserva e organiza o que aconteceu para permitir análise.
+  </div>
+</section>
+
+<section id="modelo" class="card">
+  <h2>3. Cenário: Data Warehouse de Vendas</h2>
+  <p>Vamos construir um modelo dimensional para responder perguntas como:</p>
+  <ul>
+    <li>Quanto foi vendido por mês?</li>
+    <li>Qual produto gerou maior faturamento?</li>
+    <li>Quais clientes compraram mais?</li>
+    <li>Qual foi o ticket médio das vendas?</li>
+  </ul>
+
+  <h3>Grão da tabela fato</h3>
+  <div class="callout">
+    Cada registro da <strong>FATO_VENDAS</strong> representa a venda de um produto para um cliente em uma determinada data.
+  </div>
+
+  <h3>Modelo Estrela — 3 dimensões + 1 fato</h3>
+  <div class="schema" aria-label="Modelo estrela com três dimensões, uma tabela fato e cardinalidade um para muitos">
+    <div class="table-box tempo">
+      <h4>DIM_TEMPO</h4>
+      <ul><li><span class="pk">PK</span> id_tempo</li><li>data_completa</li><li>dia</li><li>mes</li><li>ano</li></ul>
+    </div>
+
+    <div class="rel reltempo" aria-label="Cardinalidade de DIM_TEMPO para FATO_VENDAS: um para muitos">
+      <span class="one">1</span><span class="rel-line"></span><span class="many">N</span>
+    </div>
+
+    <div class="table-box fato">
+      <h4>FATO_VENDAS</h4>
+      <ul>
+        <li><span class="pk">PK</span> id_venda</li>
+        <li><span class="fk">FK</span> id_tempo</li>
+        <li><span class="fk">FK</span> id_produto</li>
+        <li><span class="fk">FK</span> id_cliente</li>
+        <li>quantidade</li>
+        <li>valor_unitario</li>
+        <li>valor_total</li>
+      </ul>
+    </div>
+
+    <div class="rel relproduto" aria-label="Cardinalidade de DIM_PRODUTO para FATO_VENDAS: um para muitos">
+      <span class="many">N</span><span class="rel-line"></span><span class="one">1</span>
+    </div>
+
+    <div class="table-box produto">
+      <h4>DIM_PRODUTO</h4>
+      <ul><li><span class="pk">PK</span> id_produto</li><li>nome_produto</li><li>categoria</li><li>marca</li></ul>
+    </div>
+
+    <div class="table-box cliente">
+      <h4>DIM_CLIENTE</h4>
+      <ul><li><span class="pk">PK</span> id_cliente</li><li>nome_cliente</li><li>cidade</li><li>estado</li></ul>
+    </div>
+  </div>
+
+  <div class="relcliente" aria-label="Cardinalidade de DIM_CLIENTE para FATO_VENDAS: um para muitos">
+    <span class="one">1</span><span class="rel-line"></span><span class="many">N</span>
+  </div>
+
+  <div class="callout">
+    <strong>Cardinalidade do modelo:</strong><br>
+    DIM_TEMPO <strong>1:N</strong> FATO_VENDAS<br>
+    DIM_PRODUTO <strong>1:N</strong> FATO_VENDAS<br>
+    DIM_CLIENTE <strong>1:N</strong> FATO_VENDAS
+    <br><br>
+    Isso significa que um único registro em cada dimensão pode estar relacionado a muitas linhas na tabela fato.
+    Por exemplo, um produto pode aparecer em várias vendas, um cliente pode realizar várias compras e uma mesma data pode possuir várias vendas.
+  </div>
+
+  <div class="grid">
+    <div class="mini"><strong>Dimensões</strong><br>Contêm o contexto descritivo usado para filtrar, agrupar e detalhar análises.</div>
+    <div class="mini"><strong>Fato</strong><br>Contém as chaves para as dimensões e as medidas numéricas do processo de negócio.</div>
+  </div>
+</section>
+
+<section id="sql" class="card">
+  <h2>4. Construindo o Data Warehouse em SQL</h2>
+  <p>Exemplo compatível com <strong>MySQL 8+</strong>. Execute os scripts na ordem apresentada.</p>
+
+  <div class="tabs">
+    <button type="button" class="tab-btn active" data-tab="db">1. Banco</button>
+    <button type="button" class="tab-btn" data-tab="dims">2. Dimensões</button>
+    <button type="button" class="tab-btn" data-tab="fato">3. Fato</button>
+    <button type="button" class="tab-btn" data-tab="all">4. Script completo</button>
+  </div>
+
+  <div id="db" class="tab-panel active">
+    <button type="button" class="copy" data-copy="code-db">Copiar SQL</button>
+    <pre><code id="code-db">CREATE DATABASE dw_vendas;
+USE dw_vendas;</code></pre>
+  </div>
+
+  <div id="dims" class="tab-panel">
+    <button type="button" class="copy" data-copy="code-dims">Copiar SQL</button>
+    <pre><code id="code-dims">CREATE TABLE dim_tempo (
+    id_tempo INT PRIMARY KEY,
+    data_completa DATE NOT NULL,
+    dia INT NOT NULL,
+    mes INT NOT NULL,
+    nome_mes VARCHAR(20),
+    trimestre INT,
+    ano INT NOT NULL
+);
+
+CREATE TABLE dim_produto (
+    id_produto INT PRIMARY KEY,
+    nome_produto VARCHAR(100) NOT NULL,
+    categoria VARCHAR(60),
+    marca VARCHAR(60)
+);
+
+CREATE TABLE dim_cliente (
+    id_cliente INT PRIMARY KEY,
+    nome_cliente VARCHAR(120) NOT NULL,
+    cidade VARCHAR(80),
+    estado CHAR(2)
+);</code></pre>
+  </div>
+
+  <div id="fato" class="tab-panel">
+    <button type="button" class="copy" data-copy="code-fato">Copiar SQL</button>
+    <pre><code id="code-fato">CREATE TABLE fato_vendas (
+    id_venda INT PRIMARY KEY,
+    id_tempo INT NOT NULL,
+    id_produto INT NOT NULL,
+    id_cliente INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_unitario DECIMAL(10,2) NOT NULL,
+    valor_total DECIMAL(12,2) NOT NULL,
+
+    CONSTRAINT fk_venda_tempo
+        FOREIGN KEY (id_tempo)
+        REFERENCES dim_tempo(id_tempo),
+
+    CONSTRAINT fk_venda_produto
+        FOREIGN KEY (id_produto)
+        REFERENCES dim_produto(id_produto),
+
+    CONSTRAINT fk_venda_cliente
+        FOREIGN KEY (id_cliente)
+        REFERENCES dim_cliente(id_cliente)
+);</code></pre>
+  </div>
+
+  <div id="all" class="tab-panel">
+    <button type="button" class="copy" data-copy="code-all">Copiar SQL</button>
+    <pre><code id="code-all">CREATE DATABASE dw_vendas;
+USE dw_vendas;
+
+CREATE TABLE dim_tempo (
+    id_tempo INT PRIMARY KEY,
+    data_completa DATE NOT NULL,
+    dia INT NOT NULL,
+    mes INT NOT NULL,
+    nome_mes VARCHAR(20),
+    trimestre INT,
+    ano INT NOT NULL
+);
+
+CREATE TABLE dim_produto (
+    id_produto INT PRIMARY KEY,
+    nome_produto VARCHAR(100) NOT NULL,
+    categoria VARCHAR(60),
+    marca VARCHAR(60)
+);
+
+CREATE TABLE dim_cliente (
+    id_cliente INT PRIMARY KEY,
+    nome_cliente VARCHAR(120) NOT NULL,
+    cidade VARCHAR(80),
+    estado CHAR(2)
+);
+
+CREATE TABLE fato_vendas (
+    id_venda INT PRIMARY KEY,
+    id_tempo INT NOT NULL,
+    id_produto INT NOT NULL,
+    id_cliente INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_unitario DECIMAL(10,2) NOT NULL,
+    valor_total DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (id_tempo) REFERENCES dim_tempo(id_tempo),
+    FOREIGN KEY (id_produto) REFERENCES dim_produto(id_produto),
+    FOREIGN KEY (id_cliente) REFERENCES dim_cliente(id_cliente)
+);</code></pre>
+  </div>
+</section>
+
+<section id="carga" class="card">
+  <h2>5. Inserindo dados de exemplo</h2>
+  <p>A ordem da carga é importante: primeiro carregamos as dimensões e depois a tabela fato.</p>
+  <div class="flow">
+    <span class="step">DIM_TEMPO</span><span class="arrow">→</span>
+    <span class="step">DIM_PRODUTO</span><span class="arrow">→</span>
+    <span class="step">DIM_CLIENTE</span><span class="arrow">→</span>
+    <span class="step">FATO_VENDAS</span>
+  </div>
+  <button type="button" class="copy" data-copy="code-insert">Copiar SQL</button>
+  <pre><code id="code-insert">INSERT INTO dim_tempo VALUES
+(20260901, '2026-09-01', 1, 9, 'Setembro', 3, 2026),
+(20260902, '2026-09-02', 2, 9, 'Setembro', 3, 2026),
+(20261001, '2026-10-01', 1, 10, 'Outubro', 4, 2026);
+
+INSERT INTO dim_produto VALUES
+(1, 'Notebook Pro', 'Informática', 'TechOne'),
+(2, 'Monitor 27', 'Informática', 'ViewMax'),
+(3, 'Cadeira Office', 'Móveis', 'Comfort');
+
+INSERT INTO dim_cliente VALUES
+(1, 'Ana Souza', 'Maringá', 'PR'),
+(2, 'Carlos Lima', 'Londrina', 'PR'),
+(3, 'Marina Costa', 'São Paulo', 'SP');
+
+INSERT INTO fato_vendas VALUES
+(1, 20260901, 1, 1, 1, 4500.00, 4500.00),
+(2, 20260901, 2, 2, 2, 1200.00, 2400.00),
+(3, 20260902, 3, 1, 1, 850.00, 850.00),
+(4, 20260902, 2, 3, 1, 1200.00, 1200.00),
+(5, 20261001, 1, 2, 1, 4500.00, 4500.00),
+(6, 20261001, 3, 3, 2, 850.00, 1700.00);</code></pre>
+
+  <div class="callout warn">
+    <strong>Por que carregar a fato por último?</strong> Porque suas chaves estrangeiras precisam encontrar registros válidos nas dimensões.
+  </div>
+</section>
+
+<section id="consultas" class="card">
+  <h2>6. Consultas analíticas</h2>
+  <p>Agora o Data Warehouse começa a cumprir seu papel: responder perguntas de negócio.</p>
+
+  <details open>
+    <summary>Faturamento por mês</summary>
+    <pre><code>SELECT
+    t.ano,
+    t.mes,
+    t.nome_mes,
+    SUM(f.valor_total) AS faturamento
+FROM fato_vendas f
+JOIN dim_tempo t
+    ON f.id_tempo = t.id_tempo
+GROUP BY t.ano, t.mes, t.nome_mes
+ORDER BY t.ano, t.mes;</code></pre>
+  </details>
+
+  <details>
+    <summary>Faturamento por produto</summary>
+    <pre><code>SELECT
+    p.nome_produto,
+    p.categoria,
+    SUM(f.quantidade) AS qtd_vendida,
+    SUM(f.valor_total) AS faturamento
+FROM fato_vendas f
+JOIN dim_produto p
+    ON f.id_produto = p.id_produto
+GROUP BY p.nome_produto, p.categoria
+ORDER BY faturamento DESC;</code></pre>
+  </details>
+
+  <details>
+    <summary>Faturamento por cliente</summary>
+    <pre><code>SELECT
+    c.nome_cliente,
+    c.cidade,
+    c.estado,
+    SUM(f.valor_total) AS total_comprado
+FROM fato_vendas f
+JOIN dim_cliente c
+    ON f.id_cliente = c.id_cliente
+GROUP BY c.nome_cliente, c.cidade, c.estado
+ORDER BY total_comprado DESC;</code></pre>
+  </details>
+
+  <details>
+    <summary>Ticket médio</summary>
+    <pre><code>SELECT
+    ROUND(AVG(valor_total), 2) AS ticket_medio
+FROM fato_vendas;</code></pre>
+  </details>
+</section>
+
+<section class="card">
+  <h2>7. Entendendo o caminho dos dados</h2>
+  <div class="flow">
+    <span class="step">Sistema Transacional</span><span class="arrow">→</span>
+    <span class="step">Extração</span><span class="arrow">→</span>
+    <span class="step">Transformação</span><span class="arrow">→</span>
+    <span class="step">Data Warehouse</span><span class="arrow">→</span>
+    <span class="step">BI / Analytics</span>
+  </div>
+  <p>Neste exercício criamos diretamente as estruturas do Data Warehouse. Em um projeto real, os dados normalmente seriam extraídos de sistemas operacionais, tratados em um processo de <strong>ETL ou ELT</strong> e então carregados nas dimensões e fatos.</p>
+</section>
+
+<section id="desafio" class="card">
+  <h2>8. Desafio prático</h2>
+  <p>Depois de executar o exemplo, tente evoluir o modelo sem consultar a resposta imediatamente.</p>
+  <div class="checklist" id="checklist">
+    <label><input type="checkbox"> Criar uma nova dimensão chamada <strong>DIM_VENDEDOR</strong>.</label>
+    <label><input type="checkbox"> Adicionar <strong>id_vendedor</strong> na FATO_VENDAS.</label>
+    <label><input type="checkbox"> Inserir pelo menos 3 vendedores.</label>
+    <label><input type="checkbox"> Relacionar cada venda a um vendedor.</label>
+    <label><input type="checkbox"> Criar uma consulta de faturamento por vendedor.</label>
+  </div>
+  <div class="progress" aria-label="Progresso do desafio"><span id="bar"></span></div>
+  <div id="progressText">0 de 5 etapas concluídas.</div>
+</section>
+
+<section id="quiz" class="card">
+  <h2>9. Quiz de fixação</h2>
+  <p>Marque uma alternativa em cada questão e clique em <strong>Corrigir quiz</strong>.</p>
+
+  <form id="quizForm">
+    <div class="quiz-q">
+      <strong>1. Qual é a principal função de uma tabela fato?</strong>
+      <label class="option"><input type="radio" name="q1" value="a"> Armazenar apenas descrições de produtos.</label>
+      <label class="option"><input type="radio" name="q1" value="b"> Registrar medidas do processo e relacioná-las às dimensões.</label>
+      <label class="option"><input type="radio" name="q1" value="c"> Substituir todas as tabelas operacionais.</label>
+    </div>
+
+    <div class="quiz-q">
+      <strong>2. Qual tabela contém cidade e estado do cliente?</strong>
+      <label class="option"><input type="radio" name="q2" value="a"> FATO_VENDAS.</label>
+      <label class="option"><input type="radio" name="q2" value="b"> DIM_TEMPO.</label>
+      <label class="option"><input type="radio" name="q2" value="c"> DIM_CLIENTE.</label>
+    </div>
+
+    <div class="quiz-q">
+      <strong>3. Por que carregamos as dimensões antes da fato?</strong>
+      <label class="option"><input type="radio" name="q3" value="a"> Para que as chaves estrangeiras encontrem registros válidos.</label>
+      <label class="option"><input type="radio" name="q3" value="b"> Porque a tabela fato não possui números.</label>
+      <label class="option"><input type="radio" name="q3" value="c"> Apenas por convenção estética.</label>
+    </div>
+
+    <div class="quiz-q">
+      <strong>4. No exemplo, qual é o grão da FATO_VENDAS?</strong>
+      <label class="option"><input type="radio" name="q4" value="a"> Um registro por cliente.</label>
+      <label class="option"><input type="radio" name="q4" value="b"> A venda de um produto para um cliente em uma data.</label>
+      <label class="option"><input type="radio" name="q4" value="c"> Um registro por mês.</label>
+    </div>
+
+    <p>
+      <button class="btn" type="submit">Corrigir quiz</button>
+      <button class="btn secondary" id="resetQuiz" type="button">Limpar respostas</button>
+    </p>
+    <div id="quizResult" aria-live="polite"></div>
+  </form>
+</section>
+
+<section class="card">
+  <h2>10. Resumo</h2>
+  <table>
+    <thead><tr><th>Elemento</th><th>Papel no Data Warehouse</th></tr></thead>
+    <tbody>
+      <tr><td>DIM_TEMPO</td><td>Permite análise por data, mês, trimestre e ano.</td></tr>
+      <tr><td>DIM_PRODUTO</td><td>Permite análise por produto, categoria e marca.</td></tr>
+      <tr><td>DIM_CLIENTE</td><td>Permite análise por cliente e localização.</td></tr>
+      <tr><td>FATO_VENDAS</td><td>Centraliza as medidas do processo de vendas e as chaves das dimensões.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <strong>Mensagem final:</strong> em modelagem dimensional, primeiro definimos o processo de negócio e o grão; depois identificamos as dimensões que descrevem o evento e as medidas que serão armazenadas na tabela fato.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <strong>Banco de Dados e Mineração de Dados</strong><br>
+  Professor Rodolfo Terra<br>
+  <a href="https://www.linkedin.com/in/rodolffoterra/" target="_blank" rel="noopener">linkedin.com/in/rodolffoterra/</a>
+  &nbsp;|&nbsp;
+  <a href="https://github.com/rodolffoterra" target="_blank" rel="noopener">github.com/rodolffoterra</a>
+</footer>
+
+<script>
+(function(){
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById(btn.dataset.tab);
+      if(panel) panel.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const el = document.getElementById(btn.dataset.copy);
+      if(!el) return;
+      const txt = el.innerText;
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          await navigator.clipboard.writeText(txt);
+          const old = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => btn.textContent = old, 1200);
+        }else{
+          btn.textContent = 'Selecione o SQL abaixo';
+          setTimeout(() => btn.textContent = 'Copiar SQL', 1500);
+        }
+      }catch(e){
+        btn.textContent = 'Selecione o SQL abaixo';
+        setTimeout(() => btn.textContent = 'Copiar SQL', 1500);
+      }
+    });
+  });
+
+  const checklist = document.querySelectorAll('#checklist input[type="checkbox"]');
+  const bar = document.getElementById('bar');
+  const progressText = document.getElementById('progressText');
+  function updateProgress(){
+    const done = [...checklist].filter(c => c.checked).length;
+    bar.style.width = (done / checklist.length * 100) + '%';
+    progressText.textContent = `${done} de ${checklist.length} etapas concluídas.`;
+  }
+  checklist.forEach(c => c.addEventListener('change', updateProgress));
+
+  const form = document.getElementById('quizForm');
+  const result = document.getElementById('quizResult');
+  const answers = {q1:'b',q2:'c',q3:'a',q4:'b'};
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    let score = 0;
+    let answered = 0;
+    Object.keys(answers).forEach(q => {
+      const choice = form.querySelector(`input[name="${q}"]:checked`);
+      if(choice){
+        answered++;
+        if(choice.value === answers[q]) score++;
+      }
+    });
+    if(answered < 4){
+      result.style.color = '#8b5b00';
+      result.textContent = `Você respondeu ${answered} de 4 questões. Complete todas antes de finalizar.`;
+      return;
+    }
+    result.style.color = score >= 3 ? '#17804a' : '#b43b3b';
+    const msg = score === 4 ? 'Excelente! Você compreendeu os conceitos principais.'
+      : score === 3 ? 'Muito bom! Revise apenas a questão que errou.'
+      : 'Revise as seções Modelo Estrela e Construindo o Data Warehouse.';
+    result.textContent = `Resultado: ${score}/4. ${msg}`;
+  });
+
+  document.getElementById('resetQuiz').addEventListener('click', () => {
+    form.reset();
+    result.textContent = '';
+  });
+})();
+</script>
+</body>
+</html>

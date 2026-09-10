@@ -320,7 +320,7 @@ elif perfil == "🛠️ Técnico":
             nome = st.text_input("Nome do técnico")
             email = st.text_input("E-mail do técnico")
             especialidade = st.selectbox("Especialidade", ["Hardware", "Software", "Redes", "Acesso", "Infraestrutura", "Geral"])
-            nivel = st.selectbox("Nível", ["Júnior", "Pleno", "Sênior"])
+            nivel = st.selectbox("Nível", ["júnior", "pleno", "sênior"])
             criar = st.form_submit_button("Cadastrar técnico", type="primary")
         if criar:
             payload = {
