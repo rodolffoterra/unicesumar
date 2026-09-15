@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratório Docker — TechPort</title>
+<style>
+:root{--navy:#07335f;--blue:#0a66c2;--cyan:#13a8ff;--green:#148a58;--red:#d63d43;--bg:#f3f7fb;--border:#d8e6f3;--text:#18324b;--code:#101d2b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+header{background:linear-gradient(120deg,var(--navy),#07549d 70%,var(--cyan));color:#fff;padding:28px 5vw}.brand{font-size:29px;font-weight:800}.brand small{display:block;font-size:11px;letter-spacing:1px}.eyebrow{margin-top:20px;color:#a8ddff;text-transform:uppercase;font-size:13px;font-weight:800;letter-spacing:1.3px}h1{font-size:clamp(34px,5vw,58px);line-height:1.05;margin:5px 0 10px}.sub{font-size:19px;max-width:1050px;color:#e5f3ff}.prof{margin-top:15px;font-size:14px}
+.wrap{max-width:1400px;margin:auto;padding:24px}.layout{display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:start}
+nav{position:sticky;top:15px;background:white;border:1px solid var(--border);border-radius:16px;padding:14px}nav b{display:block;margin-bottom:8px}nav a{display:block;padding:7px 9px;color:#26577f;text-decoration:none;border-radius:8px;font-size:14px}nav a:hover{background:#e9f4ff}
+section{background:#fff;border:1px solid var(--border);border-radius:18px;padding:26px;margin-bottom:20px;box-shadow:0 8px 26px rgba(20,60,100,.05)}
+h2{margin:0 0 10px;color:#083761;font-size:29px}h3{margin:22px 0 9px}.tag{display:inline-block;background:#e9f5ff;color:#0861aa;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800;text-transform:uppercase}
+pre{background:var(--code);color:#e9f3ff;padding:17px;border-radius:13px;overflow:auto;font-size:14px;line-height:1.55}code{font-family:Consolas,monospace}.cmd{color:#8ee0ff}
+.note,.warn,.ok{padding:14px 17px;border-radius:13px;margin:14px 0}.note{background:#eef7ff;border-left:5px solid var(--blue)}.warn{background:#fff1f1;border-left:5px solid var(--red)}.ok{background:#ecfaf3;border-left:5px solid var(--green)}
+.flow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin:16px 0}.node{background:#eef7ff;border:1px solid #c8e2f7;border-radius:13px;padding:12px 15px;text-align:center;font-weight:800;min-width:130px}.arrow{font-size:24px;color:#167fcf}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#fbfdff;border:1px solid var(--border);border-radius:14px;padding:15px}
+table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}th{background:#eef7ff}
+footer{background:var(--navy);color:#fff;text-align:center;padding:22px}footer a{color:#a6dcff}
+@media(max-width:950px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto}.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">UniCesumar<small>EDUCAÇÃO PRESENCIAL E A DISTÂNCIA</small></div>
+<div class="eyebrow">Projeto, Implementação e Teste de Software</div>
+<h1>Laboratório — TechPort no Docker</h1>
+<div class="sub">Tutorial ajustado para a estrutura real do projeto da Aula 09: construir imagens, iniciar Streamlit e FastAPI em containers e manter o MySQL do Windows.</div>
+<div class="prof">Professor Rodolfo Terra · linkedin.com/in/rodolffoterra/ · github.com/rodolffoterra</div>
+</header>
+
+<div class="wrap"><div class="layout">
+<nav>
+<b>🧭 Etapas</b>
+<a href="#mapa">0. Caminhos confirmados</a>
+<a href="#validar">1. Validar Docker</a>
+<a href="#ignore">2. .dockerignore</a>
+<a href="#api">3. Dockerfile API</a>
+<a href="#streamlit">4. Dockerfile Streamlit</a>
+<a href="#compose">5. Docker Compose</a>
+<a href="#build">6. Build</a>
+<a href="#subir">7. Subir</a>
+<a href="#teste">8. Validar aplicação</a>
+<a href="#logs">9. Logs</a>
+<a href="#parar">10. Parar</a>
+<a href="#erros">11. Troubleshooting</a>
+<a href="#refazer-zero">12. Refazer do zero</a>
+</nav>
+
+<main>
+<section id="mapa">
+<span class="tag">0 — Caminhos confirmados</span>
+<h2>Agora já sabemos exatamente onde estão os arquivos</h2>
+<pre><code>techport/
+├── requirements.txt
+├── app/
+│   ├── .env
+│   ├── laboratorio_aula08.py
+│   ├── api/
+│   │   └── fastapi_app.py
+│   └── app/
+│       └── api/
+│           └── fastapi_app.py
+└── ...</code></pre>
+<div class="ok"><b>Vamos usar:</b> <code>app/laboratorio_aula08.py</code>, <code>app/api/fastapi_app.py</code>, <code>requirements.txt</code> da raiz e <code>app/.env</code>.</div>
+<div class="warn"><b>Importante:</b> existe uma cópia de <code>fastapi_app.py</code> em <code>app/app/api/</code>, mas para manter o mesmo padrão usado nas aulas vamos apontar o Uvicorn para <code>app.api.fastapi_app:app</code>.</div>
+</section>
+
+<section id="validar">
+<span class="tag">1 — Pré-validação</span>
+<h2>Validar Docker Desktop e Compose</h2>
+<pre><code class="cmd">docker --version
+docker compose version
+docker info</code></pre>
+<p>Se tudo responder, teste:</p>
+<pre><code class="cmd">docker run hello-world</code></pre>
+</section>
+
+<section id="ignore">
+<span class="tag">2 — Build limpo</span>
+<h2>Criar <code>.dockerignore</code> na raiz</h2>
+<pre><code>.venv
+.env
+app/.env
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.vscode
+.idea</code></pre>
+<div class="note">O arquivo <code>app/.env</code> não será copiado para dentro da imagem. O Docker Compose vai fornecê-lo em tempo de execução.</div>
+</section>
+
+<section id="api">
+<span class="tag">3 — FastAPI</span>
+<h2>Criar <code>Dockerfile.api</code> na raiz</h2>
+<pre><code>FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["python", "-m", "uvicorn", "app.api.fastapi_app:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+<div class="note"><code>app.api.fastapi_app:app</code> corresponde ao arquivo confirmado em <code>techport/app/api/fastapi_app.py</code>.</div>
+</section>
+
+<section id="streamlit">
+<span class="tag">4 — Streamlit</span>
+<h2>Criar <code>Dockerfile.streamlit</code> na raiz</h2>
+<pre><code>FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8501
+
+CMD ["python", "-m", "streamlit", "run", "app/laboratorio_aula08.py", "--server.address=0.0.0.0", "--server.port=8501"]</code></pre>
+<div class="ok">O caminho <code>app/laboratorio_aula08.py</code> foi confirmado no seu projeto.</div>
+</section>
+
+<section id="compose">
+<span class="tag">5 — Docker Compose</span>
+<h2>Criar <code>docker-compose.yml</code> na raiz</h2>
+<pre><code>services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: techport-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./app/.env
+    environment:
+      DB_HOST: host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: techport-streamlit
+    ports:
+      - "8501:8501"
+    env_file:
+      - ./app/.env
+    environment:
+      API_BASE_URL: http://api:8000
+    depends_on:
+      - api
+    restart: unless-stopped</code></pre>
+
+<div class="flow">
+<div class="node">NAVEGADOR<br>localhost:8501</div><div class="arrow">→</div>
+<div class="node">STREAMLIT<br>container</div><div class="arrow">→</div>
+<div class="node">FASTAPI<br>api:8000</div><div class="arrow">→</div>
+<div class="node">MYSQL WINDOWS<br>host.docker.internal</div>
+</div>
+
+<div class="warn"><b>Ponto importante:</b> se sua aplicação não lê <code>DB_HOST</code> e <code>API_BASE_URL</code> do ambiente, será necessário ajustar o arquivo de configuração Python. O Compose só consegue sobrescrever valores que o código realmente consulta.</div>
+</section>
+
+<section id="build">
+<span class="tag">6 — Build</span>
+<h2>Construir as imagens</h2>
+
+<div class="note"><b>Antes de executar:</b> confirme que os dois <code>CMD</code> dos Dockerfiles estão em uma única linha. Isso evita erro de sintaxe durante a leitura do Dockerfile.</div>
+
+<h3>Dockerfile.api — linha correta</h3>
+<pre><code>CMD ["python", "-m", "uvicorn", "app.api.fastapi_app:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+
+<h3>Dockerfile.streamlit — linha correta</h3>
+<pre><code>CMD ["python", "-m", "streamlit", "run", "app/laboratorio_aula08.py", "--server.address=0.0.0.0", "--server.port=8501"]</code></pre>
+
+<p>Agora execute um build limpo:</p>
+<pre><code class="cmd">docker compose build --no-cache</code></pre>
+
+<p>Quando o build terminar sem erros, confirme as imagens:</p>
+<pre><code class="cmd">docker images</code></pre>
+
+<div class="ok"><b>Resultado esperado:</b> devem aparecer imagens do TechPort, como <code>techport-api</code> e <code>techport-streamlit</code>.</div>
+
+<div class="warn"><b>Se aparecer erro apontando para uma linha do <code>CMD</code>:</b> revise se ele está realmente em uma única linha e sem quebras entre os argumentos.</div>
+
+<div class="flow"><div class="node">CÓDIGO</div><div class="arrow">→</div><div class="node">DOCKERFILE</div><div class="arrow">→</div><div class="node">BUILD LIMPO</div><div class="arrow">→</div><div class="node">IMAGEM</div></div>
+</section>
+
+<section id="subir">
+<span class="tag">7 — Run</span>
+<h2>Subir a aplicação</h2>
+<p>Primeiro rode com os logs visíveis:</p>
+<pre><code class="cmd">docker compose up</code></pre>
+<p>Se funcionar, pare com <b>Ctrl+C</b> e suba em segundo plano:</p>
+<pre><code class="cmd">docker compose up -d</code></pre>
+<p>Para reconstruir e subir:</p>
+<pre><code class="cmd">docker compose up -d --build</code></pre>
+</section>
+
+<section id="teste">
+<span class="tag">8 — Validação</span>
+<h2>Validar o TechPort</h2>
+<div class="grid3">
+<div class="card"><b>Streamlit</b><pre><code>http://localhost:8501</code></pre><p>A interface deve abrir.</p></div>
+<div class="card"><b>FastAPI</b><pre><code>http://localhost:8000/docs</code></pre><p>O Swagger deve abrir.</p></div>
+<div class="card"><b>MySQL</b><p>Crie ou altere um chamado e confirme a persistência no banco local.</p></div>
+</div>
+
+<h3>Teste funcional recomendado</h3>
+<ol>
+<li>Abra o Streamlit.</li>
+<li>Entre como Usuário.</li>
+<li>Crie um chamado.</li>
+<li>Troque para Técnico.</li>
+<li>Assuma o chamado e atualize o status.</li>
+<li>Volte ao Usuário e confirme a alteração.</li>
+<li>Abra o Administrador e inspecione o chamado.</li>
+<li>Confira o registro no MySQL.</li>
+</ol>
+<div class="ok">Se o fluxo funcionar, você validou a cadeia <b>Streamlit → FastAPI → MySQL</b> com a aplicação containerizada.</div>
+</section>
+
+<section id="logs">
+<span class="tag">9 — Observabilidade</span>
+<h2>Ver containers e logs</h2>
+<pre><code class="cmd">docker compose ps
+docker ps -a
+docker compose logs
+docker compose logs -f
+docker logs techport-api
+docker logs techport-streamlit</code></pre>
+</section>
+
+<section id="parar">
+<span class="tag">10 — Encerrar</span>
+<h2>Parar o ambiente</h2>
+<pre><code class="cmd">docker compose stop</code></pre>
+<p>Ou remover containers e rede:</p>
+<pre><code class="cmd">docker compose down</code></pre>
+<p>As imagens continuam disponíveis:</p>
+<pre><code class="cmd">docker images</code></pre>
+</section>
+
+<section id="erros">
+<span class="tag">11 — Troubleshooting</span>
+<h2>Erros comuns</h2>
+
+<h3>API não inicia</h3>
+<pre><code class="cmd">docker logs techport-api</code></pre>
+<p>Se aparecer erro de importação, confirme que o módulo principal continua sendo <code>app.api.fastapi_app:app</code>.</p>
+
+<h3>Streamlit não inicia</h3>
+<pre><code class="cmd">docker logs techport-streamlit</code></pre>
+
+<h3>Streamlit tenta acessar 127.0.0.1:8000</h3>
+<p>Dentro do container, o endereço correto da API é:</p>
+<pre><code>http://api:8000</code></pre>
+<p>O código deve utilizar a variável <code>API_BASE_URL</code>.</p>
+
+<h3>API não conecta ao MySQL</h3>
+<p>O host precisa ser:</p>
+<pre><code>host.docker.internal</code></pre>
+<p>Confirme também se o MySQL aceita conexão pela porta <code>3306</code>.</p>
+
+<h3>Porta ocupada</h3>
+<pre><code class="cmd">netstat -ano | findstr :8501
+netstat -ano | findstr :8000</code></pre>
+
+<h3>Erro de sintaxe no Dockerfile durante o build</h3>
+<p>Se o erro apontar para uma linha como <code>"app/laboratorio_aula08.py"</code>, normalmente o <code>CMD</code> foi quebrado em várias linhas.</p>
+<p>Use:</p>
+<pre><code>CMD ["python", "-m", "streamlit", "run", "app/laboratorio_aula08.py", "--server.address=0.0.0.0", "--server.port=8501"]</code></pre>
+<p>E para a API:</p>
+<pre><code>CMD ["python", "-m", "uvicorn", "app.api.fastapi_app:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+
+<h3>Alterou dependências ou Dockerfiles?</h3>
+<pre><code class="cmd">docker compose build --no-cache
+docker compose up</code></pre>
+</section>
+
+<section>
+<span class="tag">🏁 Resultado</span>
+<h2>Antes e depois</h2>
+<p><b>Antes:</b></p>
+<pre><code>Terminal 1 → python -m uvicorn app.api.fastapi_app:app --reload
+Terminal 2 → python -m streamlit run app/laboratorio_aula08.py</code></pre>
+<p><b>Agora:</b></p>
+<pre><code class="cmd">docker compose up</code></pre>
+<div class="ok"><b>Mesmo projeto. Ambiente padronizado. Execução reproduzível.</b></div>
+</section>
+<section id="refazer-zero">
+<span class="tag">🔄 Refazer o laboratório</span>
+<h2>Excluir e reconstruir o TechPort do zero</h2>
+
+<p>Para repetir todo o processo de criação das imagens e execução dos containers, utilize exatamente esta sequência:</p>
+
+<pre><code class="cmd"># 1. Derrubar os containers
+docker compose down
+
+# 2. Excluir as imagens do TechPort
+docker rmi techport-api:latest techport-streamlit:latest
+
+# 3. Confirmar que foram removidas
+docker images
+
+# 4. Construir novamente
+docker compose build --no-cache
+
+# 5. Confirmar que as imagens foram recriadas
+docker images
+
+# 6. Executar
+docker compose up</code></pre>
+
+<div class="flow">
+<div class="node">DERRUBAR<br>CONTAINERS</div>
+<div class="arrow">→</div>
+<div class="node">EXCLUIR<br>IMAGENS</div>
+<div class="arrow">→</div>
+<div class="node">BUILD<br>LIMPO</div>
+<div class="arrow">→</div>
+<div class="node">RECRIAR<br>IMAGENS</div>
+<div class="arrow">→</div>
+<div class="node">EXECUTAR<br>TECHPORT</div>
+</div>
+
+<div class="ok"><b>Objetivo didático:</b> essa sequência permite repetir o laboratório desde o início e visualizar claramente a diferença entre imagem, container, build e execução.</div>
+</section>
+
+</main>
+</div></div>
+
+<footer>
+<b>Professor Rodolfo Terra</b><br>
+<a href="https://www.linkedin.com/in/rodolffoterra/">linkedin.com/in/rodolffoterra/</a> ·
+<a href="https://github.com/rodolffoterra">github.com/rodolffoterra</a>
+<div style="margin-top:7px;color:#c2def8">TechPort — do código ao container.</div>
+</footer>
+</body>
+</html>

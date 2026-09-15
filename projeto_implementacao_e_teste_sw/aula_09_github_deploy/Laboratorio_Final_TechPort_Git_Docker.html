@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratório Final — TechPort do Git ao Docker</title>
+<style>
+:root{--b:#073b73;--b2:#0a69c7;--c:#08a7ff;--bg:#eef5fc;--ink:#102642;--mut:#5a6f85;--bd:#d7e7f6;--code:#0d1b2a;--ok:#159061;--warn:#d9484c}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.55 Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(110deg,#052e5c,#07559d 70%,#0aa8ff);color:#fff;padding:30px 5vw}.brand{font-weight:900;font-size:28px}.ey{margin-top:22px;color:#8ed8ff;text-transform:uppercase;font-weight:800;letter-spacing:1px;font-size:13px}h1{font-size:clamp(36px,5vw,62px);line-height:1.02;margin:6px 0}.sub{font-size:20px;color:#d9efff;max-width:980px}.prof{margin-top:16px;color:#d9efff;font-size:14px}.wrap{max-width:1400px;margin:auto;padding:24px}.grid{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}nav{position:sticky;top:18px;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:15px;box-shadow:0 7px 25px #173c6412}nav b{display:block;margin-bottom:8px}nav a{display:block;padding:7px 9px;border-radius:8px;text-decoration:none;color:#315d8c;font-size:14px}nav a:hover{background:#eaf5ff}section{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:27px;margin-bottom:20px;box-shadow:0 7px 25px #173c640d}h2{font-size:30px;margin:0 0 10px;color:#08355f}h3{font-size:20px;margin:24px 0 9px}.tag{display:inline-block;background:#e8f5ff;color:#075ca7;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.6px}.flow{display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;margin:18px 0}.node{padding:13px 17px;border-radius:13px;border:1px solid #c6e2fa;background:#f1f8ff;font-weight:850;text-align:center}.arr{font-size:25px;color:#0b78d4}.note,.warn,.ok{padding:14px 17px;border-radius:12px;margin:14px 0}.note{background:#edf7ff;border-left:5px solid var(--b2)}.warn{background:#fff2f2;border-left:5px solid var(--warn)}.ok{background:#ecfaf3;border-left:5px solid var(--ok)}pre{background:var(--code);color:#eaf4ff;padding:18px;border-radius:13px;overflow:auto;font:14px/1.55 Consolas,monospace}code{font-family:Consolas,monospace}.tree{white-space:pre;overflow:auto;background:#f8fbff;border:1px dashed #a9c9e9;border-radius:13px;padding:17px;font-family:Consolas,monospace}.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{border:1px solid var(--bd);border-radius:13px;padding:16px;background:#fbfdff}.step{display:flex;gap:12px;margin:14px 0}.n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#0a69c7;color:#fff;font-weight:900;flex:0 0 auto}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--bd);text-align:left}th{background:#eef7ff}footer{background:#052f60;color:#fff;padding:24px;text-align:center}footer a{color:#8ed8ff}.small{font-size:13px;color:var(--mut)}@media(max-width:930px){.grid{grid-template-columns:1fr}nav{position:relative;top:auto}.cols{grid-template-columns:1fr}}
+</style>
+</head><body>
+<header><div class="brand">◉ UniCesumar</div><div class="ey">Projeto, Implementação e Teste de Software</div><h1>Laboratório Final — TechPort do Git ao Docker</h1><div class="sub">Versionar → construir → executar → publicar. Um passo a passo para fechar a disciplina levando o TechPort do repositório Git até uma imagem Docker pronta para entrega.</div><div class="prof">Professor Rodolfo Terra · linkedin.com/in/rodolffoterra/ · github.com/rodolffoterra</div></header>
+<div class="wrap"><div class="grid">
+<nav><b>🧭 Roteiro</b><a href="#obj">1. Objetivo</a><a href="#estrutura">2. Projeto atual</a><a href="#git">3. Git + GitHub</a><a href="#install">4. Instalar Docker</a><a href="#check">5. Validar Docker</a><a href="#quick">6. Modo rápido</a><a href="#files">7. Arquivos Docker</a><a href="#build">8. Build + Run</a><a href="#compose">9. Docker Compose</a><a href="#hub">10. Docker Hub</a><a href="#errors">11. Erros comuns</a><a href="#final">12. Encerramento</a></nav>
+<main>
+<section id="obj"><span class="tag">🎯 Laboratório Final</span><h2>Vamos preparar o TechPort para entrega</h2><div class="flow"><div class="node">TECHPORT</div><div class="arr">→</div><div class="node">GIT</div><div class="arr">→</div><div class="node">GITHUB</div><div class="arr">→</div><div class="node">DOCKER</div><div class="arr">→</div><div class="node">CONTAINER</div><div class="arr">→</div><div class="node">DOCKER HUB</div></div><div class="note"><b>Objetivo:</b> versionar, construir uma imagem, executar um container e mostrar como publicar a imagem para que ela possa ser utilizada em outro ambiente.</div></section>
+
+<section id="estrutura"><span class="tag">📁 Projeto atual</span><h2>Começando pela raiz do TechPort</h2><p>Seu projeto está nessa estrutura geral:</p><div class="tree">aula_08/
+├── app/
+│   ├── api/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── database/
+│   │   ├── models/
+│   │   ├── pages/
+│   │   ├── repositories/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── core/
+│   ├── docs/
+│   ├── models/
+│   ├── pages/
+│   ├── repositories/
+│   ├── schemas/
+│   ├── services/
+│   ├── tests/
+│   └── utils/
+├── docs/
+└── tests/</div><div class="warn"><b>Atenção:</b> como existe uma pasta <code>app/app</code>, confirme onde estão os arquivos de entrada reais antes de copiar os Dockerfiles.</div><pre>Get-ChildItem -Recurse -Filter "laboratorio_aula08.py"
+Get-ChildItem -Recurse -Filter "fastapi_app.py"
+Get-ChildItem -Recurse -Filter "requirements.txt"</pre><p class="small">Nos exemplos abaixo consideramos os caminhos trabalhados no laboratório: <code>app/laboratorio_aula08.py</code> e <code>app/api/fastapi_app.py</code>. Ajuste se o resultado acima indicar outro local.</p></section>
+
+<section id="git"><span class="tag">① Git + GitHub</span><h2>Registrar a versão final</h2><div class="step"><div class="n">1</div><div><b>Verificar alterações</b><pre>git status</pre></div></div><div class="step"><div class="n">2</div><div><b>Adicionar arquivos</b><pre>git add .</pre></div></div><div class="step"><div class="n">3</div><div><b>Criar o commit</b><pre>git commit -m "Finaliza TechPort para laboratório de deploy"</pre></div></div><div class="step"><div class="n">4</div><div><b>Enviar para o GitHub</b><pre>git push</pre></div></div><div class="ok">✅ Abra o GitHub e mostre aos alunos o commit publicado. A partir daqui, o código já possui uma versão identificada e compartilhável.</div></section>
+
+<section id="install"><span class="tag">② Docker no Windows</span><h2>Instalar Docker Desktop e Docker Compose</h2><p>No Windows 10/11, a forma mais simples é usar <b>Docker Desktop</b>. Ele já inclui Docker Engine, Docker CLI e Docker Compose.</p><div class="cols"><div class="card"><b>1. Verificar WSL</b><pre>wsl --status</pre><p>Se não estiver instalado:</p><pre>wsl --install</pre><p>Reinicie o Windows se solicitado.</p></div><div class="card"><b>2. Instalar Docker Desktop</b><p>Baixe o Docker Desktop no site oficial Docker, execute o instalador e use o backend <b>WSL 2</b> quando disponível.</p><p>Depois, abra o Docker Desktop e aguarde o Engine iniciar.</p></div></div><div class="note">💡 No Docker Desktop, o Compose já vem incluído. Use <code>docker compose</code> (sem hífen), que é a sintaxe atual.</div></section>
+
+<section id="check"><span class="tag">③ Verificação</span><h2>Confirmar que o Docker está funcionando</h2><pre>docker --version
+docker compose version
+docker info</pre><p>Faça um teste simples:</p><pre>docker run hello-world</pre><div class="ok">Se o <code>hello-world</code> executar, o ambiente Docker está pronto para o laboratório.</div></section>
+
+<section id="quick"><span class="tag">⚡ Recomendado para 15 minutos</span><h2>Modo rápido: Docker no Streamlit</h2><p>Para não gastar a aula configurando três containers, a demonstração mais segura é: <b>Streamlit em Docker</b> e <b>FastAPI + MySQL ainda locais</b>.</p><div class="flow"><div class="node">STREAMLIT<br>Docker</div><div class="arr">→</div><div class="node">FASTAPI<br>Windows</div><div class="arr">→</div><div class="node">MYSQL<br>Windows</div></div><div class="warn"><b>Importante:</b> dentro do container, <code>localhost</code> aponta para o próprio container. Para chegar à FastAPI rodando no Windows com Docker Desktop, use:</div><pre>API_BASE_URL=http://host.docker.internal:8000</pre></section>
+
+<section id="files"><span class="tag">④ Arquivos Docker</span><h2>Criar os arquivos na raiz do projeto</h2><h3>.dockerignore</h3><pre>.venv
+.env
+.git
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.vscode
+.idea</pre><h3>Dockerfile.streamlit</h3><pre>FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8501
+
+ENV API_BASE_URL=http://host.docker.internal:8000
+
+CMD ["python", "-m", "streamlit", "run", "app/laboratorio_aula08.py", "--server.address=0.0.0.0", "--server.port=8501"]</pre><div class="warn">Se o seu arquivo Streamlit estiver dentro de <code>app/app/...</code>, altere somente o caminho no <code>CMD</code>.</div><h3>Dockerfile.api — para o modo completo</h3><pre>FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["python", "-m", "uvicorn", "app.api.fastapi_app:app", "--host", "0.0.0.0", "--port", "8000"]</pre></section>
+
+<section id="build"><span class="tag">⑤ Build + Run</span><h2>Construir e executar uma imagem</h2><p>Na raiz do projeto:</p><pre>docker build -f Dockerfile.streamlit -t techport-streamlit:1.0 .</pre><p>Verifique a imagem:</p><pre>docker images</pre><p>Execute:</p><pre>docker run --name techport-streamlit -p 8501:8501 techport-streamlit:1.0</pre><p>Abra no navegador:</p><pre>http://localhost:8501</pre><div class="flow"><div class="node">CÓDIGO</div><div class="arr">→</div><div class="node">BUILD</div><div class="arr">→</div><div class="node">IMAGEM</div><div class="arr">→</div><div class="node">RUN</div><div class="arr">→</div><div class="node">CONTAINER</div></div><table><tr><th>Objetivo</th><th>Comando</th></tr><tr><td>Containers ativos</td><td><code>docker ps</code></td></tr><tr><td>Todos os containers</td><td><code>docker ps -a</code></td></tr><tr><td>Logs</td><td><code>docker logs techport-streamlit</code></td></tr><tr><td>Parar</td><td><code>docker stop techport-streamlit</code></td></tr><tr><td>Remover</td><td><code>docker rm techport-streamlit</code></td></tr></table></section>
+
+<section id="compose"><span class="tag">⑥ Docker Compose</span><h2>Subir Streamlit + FastAPI + MySQL juntos</h2><div class="flow"><div class="node">STREAMLIT :8501</div><div class="arr">↔</div><div class="node">FASTAPI :8000</div><div class="arr">↔</div><div class="node">MYSQL :3306</div></div><h3>docker-compose.yml</h3><pre>services:
+  mysql:
+    image: mysql:8.4
+    container_name: techport-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: techport
+      MYSQL_USER: techport
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - techport_mysql:/var/lib/mysql
+    networks:
+      - techport-net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: techport-api
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: techport
+      DB_USER: techport
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8000:8000"
+    networks:
+      - techport-net
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: techport-streamlit
+    depends_on:
+      - api
+    environment:
+      API_BASE_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    networks:
+      - techport-net
+
+volumes:
+  techport_mysql:
+
+networks:
+  techport-net:</pre><h3>.env para o Compose</h3><pre>MYSQL_ROOT_PASSWORD=troque_esta_senha
+MYSQL_PASSWORD=troque_esta_senha</pre><div class="warn"><b>Não envie o <code>.env</code> ao GitHub.</b> Mantenha-o no <code>.gitignore</code>.</div><h3>Comandos</h3><pre>docker compose up --build
+
+docker compose ps
+
+docker compose logs -f
+
+docker compose down</pre><div class="note"><b>Se quiser usar seu MySQL do Windows:</b> remova o serviço <code>mysql</code> e configure a API com <code>DB_HOST=host.docker.internal</code>.</div></section>
+
+<section id="hub"><span class="tag">⑦ Docker Hub</span><h2>Publicar a imagem Docker</h2><p>Um registry guarda imagens prontas para uso. O fluxo é semelhante ao GitHub, mas para imagens Docker.</p><div class="step"><div class="n">1</div><div><b>Crie uma conta/repositório no Docker Hub.</b><p>Exemplo de repositório: <code>techport</code>.</p></div></div><div class="step"><div class="n">2</div><div><b>Login no terminal</b><pre>docker login</pre></div></div><div class="step"><div class="n">3</div><div><b>Tag da imagem</b><pre>docker tag techport-streamlit:1.0 SEU_USUARIO/techport:1.0</pre></div></div><div class="step"><div class="n">4</div><div><b>Push</b><pre>docker push SEU_USUARIO/techport:1.0</pre></div></div><div class="step"><div class="n">5</div><div><b>Testar em outra máquina</b><pre>docker pull SEU_USUARIO/techport:1.0
+
+docker run -p 8501:8501 SEU_USUARIO/techport:1.0</pre></div></div><div class="flow"><div class="node">BUILD</div><div class="arr">→</div><div class="node">IMAGE</div><div class="arr">→</div><div class="node">TAG</div><div class="arr">→</div><div class="node">PUSH</div><div class="arr">→</div><div class="node">DOCKER HUB</div></div></section>
+
+<section id="errors"><span class="tag">🧯 Diagnóstico</span><h2>Erros comuns</h2><h3>Docker não reconhecido</h3><p>Abra o Docker Desktop, aguarde o Engine iniciar e reabra o PowerShell.</p><h3>Porta 8501 ocupada</h3><pre>docker run -p 8502:8501 techport-streamlit:1.0</pre><h3>Streamlit não encontra FastAPI</h3><p>FastAPI no Windows:</p><pre>API_BASE_URL=http://host.docker.internal:8000</pre><p>FastAPI no Compose:</p><pre>API_BASE_URL=http://api:8000</pre><h3>API não encontra MySQL</h3><p>MySQL no Compose:</p><pre>DB_HOST=mysql</pre><p>MySQL no Windows:</p><pre>DB_HOST=host.docker.internal</pre></section>
+
+<section id="final"><span class="tag">🏁 Fechamento</span><h2>O laboratório em 15 minutos</h2><ol><li><b>2 min:</b> <code>git status</code>, commit e push.</li><li><b>2 min:</b> verificar Docker e Compose.</li><li><b>3 min:</b> mostrar Dockerfile e rodar o build.</li><li><b>3 min:</b> executar o container e abrir <code>localhost:8501</code>.</li><li><b>3 min:</b> <code>docker tag</code> + <code>docker push</code>.</li><li><b>2 min:</b> mostrar o Compose como evolução para os três serviços.</li></ol><div class="flow"><div class="node">REQUISITO</div><div class="arr">→</div><div class="node">CÓDIGO</div><div class="arr">→</div><div class="node">TESTES</div><div class="arr">→</div><div class="node">GIT</div><div class="arr">→</div><div class="node">DOCKER</div><div class="arr">→</div><div class="node">ENTREGA</div></div><div class="ok"><b>Mensagem final:</b> nenhuma etapa estava isolada. Versionamento, testes, containers e deploy fazem parte da construção e da entrega de um produto de software.</div></section>
+</main></div></div>
+<footer><b>Professor Rodolfo Terra</b><br><a href="https://www.linkedin.com/in/rodolffoterra/">linkedin.com/in/rodolffoterra/</a> · <a href="https://github.com/rodolffoterra">github.com/rodolffoterra</a><div style="margin-top:7px;color:#b8dcff">TechPort — do código à entrega.</div></footer>
+</body></html>
