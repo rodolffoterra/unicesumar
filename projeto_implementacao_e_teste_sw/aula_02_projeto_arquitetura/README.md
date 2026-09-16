@@ -1,1167 +1,891 @@
-# 🧩 Aula 02 --- Projeto de Software e Arquitetura de Sistemas
+# Aula 02 --- Projeto de Software: dos Requisitos à Arquitetura
 
-## Planejando aplicações Python antes da programação
+> **Transformando necessidades em uma solução estruturada antes de
+> começar a implementar.**
 
 **Disciplina:** Projeto, Implementação e Teste de Software\
-**Professor:** Rodolfo Terra
+**Professor:** Rodolfo Terra\
+**Projeto aplicado:** TechPort --- Sistema de Gestão de Chamados\
+**Instituição:** UniCesumar
 
-🔗 **LinkedIn:** https://www.linkedin.com/in/rodolffoterra/\
-🔗 **GitHub:** https://github.com/rodolffoterra
+[LinkedIn](https://www.linkedin.com/in/rodolffoterra/) •
+[GitHub](https://github.com/rodolffoterra)
 
 ------------------------------------------------------------------------
 
-# 📌 Sobre a Aula 02
+## Sobre esta aula
 
-Nesta aula aprofundamos a etapa de **Projeto de Software**, apresentada
-na Aula 01 como uma das bases da Engenharia de Software.
+A Aula 02 aprofunda a etapa de **Projeto de Software**, conectando os
+requisitos levantados para o sistema às primeiras decisões de
+arquitetura, interface, dados e organização da solução.
 
-A mensagem central é simples:
+Depois de compreender **o que o software precisa fazer**, precisamos
+responder:
 
-> **Bons sistemas nascem de bons projetos.**
+``` text
+COMO O SOFTWARE SERÁ CONSTRUÍDO?
+```
 
-Antes de começar a programar, precisamos tomar decisões sobre a
-estrutura da solução, responsabilidades dos componentes, organização do
-código, dados, interfaces, tecnologias e comunicação entre as partes.
+A evolução trabalhada na aula pode ser representada por:
 
 ``` text
 REQUISITOS
     ↓
-PROJETO
+CASOS DE USO
     ↓
-IMPLEMENTAÇÃO
-    ↓
-TESTES
-    ↓
-IMPLANTAÇÃO
-    ↓
-MANUTENÇÃO
-```
-
-Nesta aula, nosso foco está principalmente na segunda etapa:
-
-``` text
-REQUISITOS
-    ↓
-[ PROJETO ]
-    ↓
-IMPLEMENTAÇÃO
-```
-
-------------------------------------------------------------------------
-
-# 🔄 Retomando a Engenharia de Software
-
-Na Aula 01 vimos que o desenvolvimento de software não consiste apenas
-em escrever código.
-
-O ciclo apresentado foi:
-
-``` text
-Requisitos
-   ↓
-Projeto
-   ↓
-Implementação
-   ↓
-Testes
-   ↓
-Implantação
-   ↓
-Manutenção
-```
-
-Cada etapa influencia as seguintes.
-
-Uma analogia utilizada na aula é a construção de um prédio:
-
-``` text
-FUNDAÇÃO
-   ↓
-ESTRUTURA
-   ↓
-ACABAMENTO
-   ↓
-PRÉDIO PRONTO
-```
-
-Se a fundação estiver errada, o acabamento não resolve o problema.
-
-No desenvolvimento de software acontece algo semelhante.
-
-> **Projeto é a fundação do software.**
-
-------------------------------------------------------------------------
-
-# 🧠 O que é Projeto de Software?
-
-Uma distinção fundamental desta aula é separar **análise/requisitos** de
-**projeto**.
-
-## Análise
-
-Responde:
-
-> **O que o sistema deve fazer?**
-
-Exemplo:
-
-> "Quero um aplicativo para pedidos."
-
-Isso representa uma necessidade ou requisito.
-
-## Projeto
-
-Responde:
-
-> **Como o sistema será construído?**
-
-Agora precisamos tomar decisões:
-
--   qual banco de dados utilizar;
--   como organizar o código;
--   como será a API;
--   quais módulos existirão;
--   como as partes se comunicarão;
--   onde os dados serão armazenados.
-
-Podemos resumir:
-
-``` text
-REQUISITOS
-O QUE FAZER?
-     ↓
-PROJETO
-COMO FAZER?
-```
-
-> **Requisitos descrevem o problema. Projeto define a solução.**
-
-------------------------------------------------------------------------
-
-# 🏗️ Analogia da construção
-
-Na Engenharia Civil:
-
-``` text
-PLANTA
-  ↓
-CONSTRUÇÃO
-```
-
-Na Engenharia de Software:
-
-``` text
-PROJETO
-  ↓
-PROGRAMAÇÃO
-```
-
-Nenhum engenheiro deveria iniciar uma obra importante sem planejamento.
-
-Da mesma forma, iniciar um sistema sem pensar em sua estrutura pode
-gerar retrabalho.
-
-> **Planejamento evita retrabalho.**
-
-------------------------------------------------------------------------
-
-# 🎯 Objetivos do Projeto de Software
-
-O projeto define como a solução será construída e procura garantir que o
-software atenda às necessidades do negócio com qualidade.
-
-Entre os objetivos apresentados estão:
-
-## 1. Definir arquitetura
-
-Determinar a estrutura do sistema, seus componentes e como eles se
-relacionam.
-
-## 2. Reduzir riscos
-
-Antecipar problemas antes que eles apareçam durante a implementação.
-
-## 3. Organizar o desenvolvimento
-
-Fornecer um guia para a equipe e melhorar a produtividade.
-
-## 4. Facilitar manutenção
-
-Uma boa estrutura torna o código mais fácil de compreender, alterar e
-evoluir.
-
-## 5. Diminuir custos
-
-Problemas encontrados durante o projeto tendem a ser mais baratos de
-corrigir do que problemas descobertos depois.
-
-O projeto deve responder perguntas como:
-
-``` text
-Quem conversa com quem?
-
-Onde ficam os dados?
-
-Como o sistema poderá crescer?
-
-Como novos desenvolvedores entenderão o código?
-```
-
-------------------------------------------------------------------------
-
-# ⚖️ Requisitos × Projeto
-
-  Requisitos    Projeto
-  ------------- ----------------------
-  O que fazer   Como fazer
-  Cliente       Desenvolvedor
-  Necessidade   Solução
-  Problema      Estrutura da solução
-
-Uma forma simples de identificar a diferença:
-
-``` text
-É uma necessidade?
-        ↓
-    REQUISITO
-
-É uma decisão sobre a solução?
-        ↓
-      PROJETO
-```
-
-> **Entender essa diferença evita erros e retrabalho.**
-
-------------------------------------------------------------------------
-
-# 👨‍💻 Quem é o Arquiteto de Software?
-
-O arquiteto de software não é necessariamente a pessoa que escreve mais
-código.
-
-Seu papel está fortemente relacionado à **tomada de decisões técnicas**.
-
-Entre suas responsabilidades estão:
-
--   escolher tecnologias;
--   organizar módulos;
--   planejar crescimento;
--   avaliar integrações;
--   considerar segurança;
--   reduzir problemas futuros.
-
-Sua visão precisa combinar diferentes áreas:
-
-``` text
-                 PYTHON
-                   │
-CLOUD ───── ARQUITETO DE SOFTWARE ───── BANCO DE DADOS
-                   │
-        ┌──────────┼──────────┐
-        ↓          ↓          ↓
-       APIs   ARQUITETURA  SEGURANÇA
-                   │
-                NEGÓCIO
-```
-
-Também é importante conhecer:
-
--   desenvolvimento de software;
--   regras de negócio;
--   modelagem e design;
--   bancos de dados;
--   gerenciamento de projetos;
--   qualidade;
--   segurança.
-
-> **Arquitetura é tomada de decisão.**
-
-------------------------------------------------------------------------
-
-# 🗺️ O que é Modelagem?
-
-Modelagem significa **desenhar antes de construir**.
-
-``` text
-PROBLEMA
-Entender o que precisa ser resolvido
-        ↓
-MODELO
-Representar e planejar a solução
-        ↓
-SOFTWARE
-Implementar o que foi planejado
-```
-
-A modelagem serve para:
-
-### Explicar
-
-Facilitar a comunicação.
-
-### Documentar
-
-Registrar decisões.
-
-### Validar
-
-Verificar se a solução atende ao objetivo.
-
-### Corrigir
-
-Ajustar a solução antes de escrever grandes quantidades de código.
-
-> **Modelagem reduz erros.**
-
-------------------------------------------------------------------------
-
-# 🧱 Tipos de Projeto
-
-Um software pode ser analisado a partir de diferentes perspectivas.
-
-Na aula foram apresentadas cinco:
-
-``` text
-                 PROJETO
-              /     |     \
-             /      |      \
-     ARQUITETURA   DADOS   INTERFACES
-             \      |      /
-              \     |     /
-             COMPONENTES
-                  |
-              ALGORITMOS
-```
-
-## Arquitetura
-
-Define a estrutura geral do sistema, os principais módulos e seus
-relacionamentos.
-
-Pergunta:
-
-> Qual é a visão macro do sistema?
-
-## Dados
-
-Define como os dados serão organizados, armazenados e acessados.
-
-Pergunta:
-
-> Como os dados serão usados e protegidos?
-
-## Interfaces
-
-Define como usuários e sistemas interagem com a aplicação.
-
-Pergunta:
-
-> Como pessoas e sistemas utilizarão o software?
-
-## Componentes
-
-Define módulos e serviços e suas responsabilidades.
-
-Pergunta:
-
-> De quais partes o sistema será formado?
-
-## Algoritmos
-
-Define regras de processamento e lógica.
-
-Pergunta:
-
-> Como as tarefas serão realizadas?
-
-------------------------------------------------------------------------
-
-# 🔎 Abstração
-
-Abstrair significa **esconder detalhes desnecessários e mostrar apenas o
-que importa para determinado objetivo**.
-
-A aula utiliza a analogia de mapas:
-
-``` text
-BRASIL
-  ↓
-ESTADO
-  ↓
-CIDADE
-  ↓
-RUA
-```
-
-Cada nível apresenta mais detalhes.
-
-No software ocorre o mesmo.
-
-Dependendo de quem está analisando o sistema, não precisamos mostrar
-todos os detalhes técnicos.
-
-A abstração:
-
--   reduz complexidade;
--   facilita entendimento;
--   melhora comunicação;
--   permite decisões mais rápidas;
--   apresenta o nível de detalhe adequado para cada público.
-
-> **Nem sempre precisamos enxergar todos os detalhes.**
-
-------------------------------------------------------------------------
-
-# 🔬 Refinamento
-
-Refinamento é o processo de adicionar detalhes progressivamente até
-transformar uma ideia em uma solução implementável.
-
-``` text
-1. IDEIA
-   ↓
-2. PROTÓTIPO
-   ↓
-3. ARQUITETURA
-   ↓
-4. CÓDIGO
-```
-
-## Ideia
-
-Entendimento inicial do problema e do objetivo.
-
-## Protótipo
-
-Representação simples para validar funcionalidades principais.
-
-## Arquitetura
-
-Definição da estrutura, módulos, tecnologias, dados e regras.
-
-## Código
-
-Implementação dos detalhes definidos no projeto.
-
-O refinamento permite:
-
--   validar ideias antes de grandes investimentos;
--   ajustar caminhos rapidamente;
--   reduzir riscos;
--   evitar retrabalho;
--   aumentar gradualmente o nível de detalhe.
-
-> **Refinar é evoluir com método.**
-
-------------------------------------------------------------------------
-
-# 🧩 Modularidade em Python
-
-Modularidade significa dividir o sistema em partes com responsabilidades
-específicas.
-
-Uma estrutura apresentada na aula foi:
-
-``` text
-app/
-│
-├── api/
-│   └── __init__.py
-│
-├── models/
-│   └── __init__.py
-│
-├── services/
-│   └── __init__.py
-│
-├── database/
-│   └── __init__.py
-│
-├── schemas/
-│   └── __init__.py
-│
-├── utils/
-│   └── __init__.py
-│
-└── tests/
-    └── __init__.py
-```
-
-## `api/`
-
-Contém rotas e endpoints da aplicação.
-
-## `models/`
-
-Representa modelos relacionados aos dados.
-
-## `services/`
-
-Contém regras de negócio.
-
-## `database/`
-
-Responsável pela conexão e configurações do banco de dados.
-
-## `schemas/`
-
-Define e valida estruturas de entrada e saída.
-
-## `utils/`
-
-Funções auxiliares reutilizáveis.
-
-## `tests/`
-
-Testes da aplicação.
-
-### Por que modularizar?
-
--   código mais organizado;
--   facilidade de testes;
--   melhor trabalho em equipe;
--   manutenção mais simples;
--   reutilização;
--   crescimento controlado.
-
-> **Cada módulo possui uma responsabilidade.**
-
-------------------------------------------------------------------------
-
-# 🧰 Padrões de Projeto
-
-Padrões de projeto são soluções conhecidas para problemas recorrentes de
-desenvolvimento.
-
-Eles não são código pronto nem regras obrigatórias.
-
-São modelos que ajudam a estruturar soluções.
-
-Na aula foram apresentados:
-
-## MVC
-
-Separa responsabilidades entre:
-
-``` text
-MODEL
-VIEW
-CONTROLLER
-```
-
-## Factory
-
-Centraliza ou organiza a criação de objetos.
-
-## Singleton
-
-Busca garantir uma única instância compartilhada de determinado recurso.
-
-## Observer
-
-Permite que objetos sejam notificados quando determinado estado muda.
-
-## Strategy
-
-Permite encapsular algoritmos ou comportamentos intercambiáveis.
-
-### Por que utilizar padrões?
-
--   evitar reinventar soluções;
--   facilitar comunicação;
--   organizar o código;
--   melhorar manutenção;
--   apoiar escalabilidade.
-
-> **Use o padrão adequado ao problema adequado.**
-
-------------------------------------------------------------------------
-
-# 🏛️ Qualidade da Arquitetura
-
-Arquitetura define como o sistema será construído hoje e como poderá
-evoluir amanhã.
-
-A aula compara dois cenários.
-
-## Projeto ruim
-
-``` text
-CÓDIGO CONFUSO
-      ↓
-ERROS
-      ↓
-RETRABALHO
-      ↓
-SISTEMA DIFÍCIL DE MANTER
-```
-
-## Projeto bom
-
-``` text
-CÓDIGO ORGANIZADO
-       ↓
-POUCOS ERROS
-       ↓
-FACILIDADE DE EVOLUÇÃO
-       ↓
-SISTEMA ESTÁVEL E ESCALÁVEL
-```
-
-Uma boa arquitetura ajuda a:
-
--   reduzir riscos;
--   aumentar produtividade;
--   facilitar manutenção;
--   permitir crescimento;
--   diminuir custos.
-
-> **Arquitetura não é burocracia. É estratégia.**
-
-------------------------------------------------------------------------
-
-# 💰 Qualidade tem custo --- e erro tardio também
-
-A aula apresenta a ideia de que o custo de corrigir um problema tende a
-aumentar conforme ele avança no ciclo de desenvolvimento.
-
-``` text
-REQUISITOS
-   ↓
-PROJETO
-   ↓
-IMPLEMENTAÇÃO
-   ↓
-TESTES
-   ↓
-PRODUÇÃO
-
-custo de correção  ────────────────► tende a aumentar
-```
-
-Por isso:
-
--   planejar bem evita caminhos errados;
--   projetar bem reduz retrabalho;
--   testar ajuda a encontrar defeitos;
--   documentar facilita manutenção.
-
-> **Quanto mais cedo o erro é encontrado, menor tende a ser o custo para
-> corrigi-lo.**
-
-------------------------------------------------------------------------
-
-# 🗺️ C4 Model --- o "Google Maps" da Arquitetura
-
-O C4 Model é apresentado como uma forma de modelar e comunicar
-arquitetura em diferentes níveis de abstração.
-
-A analogia é semelhante ao zoom de um mapa.
-
-``` text
-CONTINENTE
-   ↓
-PAÍS / ESTADO
-   ↓
-CIDADE
-   ↓
-RUA
-```
-
-No C4:
-
-``` text
-NÍVEL 1 — CONTEXTO
-        ↓
-NÍVEL 2 — CONTÊINERES
-        ↓
-NÍVEL 3 — COMPONENTES
-        ↓
-NÍVEL 4 — CÓDIGO
-```
-
-Cada nível responde perguntas diferentes e atende públicos diferentes.
-
-------------------------------------------------------------------------
-
-# 🌍 C4 --- Nível 1: Contexto
-
-O Nível 1 apresenta uma **visão executiva do sistema**.
-
-Ele mostra:
-
--   quem usa o sistema;
--   qual é o sistema principal;
--   sistemas externos;
--   relações importantes;
--   ambiente em que a solução está inserida.
-
-Exemplo:
-
-``` text
-             USUÁRIO
-                ↓
-        ┌──────────────┐
-        │   SISTEMA    │
-        └──────────────┘
-          ↙          ↘
-BANCO DE DADOS    SISTEMA EXTERNO
-```
-
-Perguntas respondidas:
-
--   Quem utiliza o sistema?
--   Qual é o propósito?
--   Quais sistemas externos interagem com ele?
--   Onde estão os dados?
-
-> **Comece pelo Nível 1: ele conta a história do sistema de forma
-> simples.**
-
-------------------------------------------------------------------------
-
-# 📦 C4 --- Nível 2: Contêineres
-
-O Nível 2 apresenta as principais aplicações ou contêineres que formam a
-solução.
-
-Um exemplo apresentado:
-
-``` text
-FRONTEND
-   ↓ HTTPS / JSON
-API FASTAPI
-   ↓ SQL / ORM
-POSTGRESQL
-   ↓
-SERVIÇOS EXTERNOS
-```
-
-Aqui analisamos:
-
--   aplicações existentes;
--   responsabilidades;
--   comunicação;
--   tecnologias;
--   integrações.
-
-> **O Nível 2 funciona como um mapa das aplicações que trabalham
-> juntas.**
-
-------------------------------------------------------------------------
-
-# ⚙️ C4 --- Nível 3: Componentes
-
-O Nível 3 entra na estrutura interna de uma aplicação.
-
-Exemplo:
-
-``` text
-API FASTAPI
-     ↓
-CONTROLLERS
-     ↓
-SERVICES
-     ↓
-REPOSITORIES
-     ↓
-MODELS
-```
-
-O fluxo de uma requisição pode ser compreendido assim:
-
-``` text
-1. API recebe a requisição
-        ↓
-2. Controller valida e encaminha
-        ↓
-3. Service aplica regras de negócio
-        ↓
-4. Repository acessa os dados
-        ↓
-5. Model representa os dados
-        ↓
-6. Resposta retorna ao usuário
-```
-
-Esse nível ajuda a visualizar responsabilidades e dependências internas.
-
-> **Cada camada deve possuir uma responsabilidade clara.**
-
-------------------------------------------------------------------------
-
-# 💻 C4 --- Nível 4: Código
-
-O Nível 4 apresenta detalhes de implementação.
-
-Pode mostrar:
-
--   classes;
--   métodos;
--   objetos;
--   relacionamentos.
-
-``` text
-CLASSE
-   ↓
-MÉTODOS
-   ↓
-OBJETOS
-   ↓
-RELACIONAMENTOS
-```
-
-É o nível mais detalhado e normalmente é direcionado a desenvolvedores
-que precisam implementar, testar, depurar, refatorar e manter o código.
-
-> **O Nível 4 representa o "zoom máximo" da arquitetura.**
-
-------------------------------------------------------------------------
-
-# 🎫 Estudo de Caso da Disciplina --- Sistema de Gestão de Chamados
-
-Nesta aula também é apresentado o estudo de caso que servirá como
-laboratório ao longo da disciplina.
-
-## Problemas atuais
-
-O cenário parte de dificuldades como:
-
--   chamados perdidos;
--   demora no atendimento;
--   falta de prioridade;
--   falta de acompanhamento.
-
-## Solução proposta
-
-Construiremos progressivamente um **Sistema de Gestão de Chamados**,
-contemplando recursos como:
-
--   cadastro de chamados;
--   definição de prioridade;
--   atribuição de técnico;
--   acompanhamento de status;
--   histórico;
--   notificações.
-
-``` text
-PROBLEMAS
-   ↓
-PROJETO
-   ↓
-SISTEMA DE GESTÃO DE CHAMADOS
-   ↓
-EVOLUÇÃO DURANTE A DISCIPLINA
-```
-
-Esse sistema será utilizado para aplicar os conceitos de projeto,
-implementação e testes.
-
-------------------------------------------------------------------------
-
-# 🏗️ Arquitetura de referência do Sistema de Chamados
-
-A aula apresenta uma arquitetura em camadas para mostrar como as
-responsabilidades podem ser separadas.
-
-``` text
-USUÁRIO
-   ↓
-FRONTEND
-   ↓
-FASTAPI
-   ↓
-SERVICES
-   ↓
-SQLALCHEMY / ORM
-   ↓
-POSTGRESQL
-```
-
-Também são apresentadas tecnologias de apoio como:
-
-``` text
-JWT
-DOCKER
-PYTEST
-```
-
-A intenção é mostrar como diferentes componentes podem cooperar mantendo
-responsabilidades separadas.
-
-------------------------------------------------------------------------
-
-# 🛠️ Tecnologias apresentadas para o projeto didático
-
-A aula também apresenta uma vertente didática utilizando **Streamlit +
-Python + MySQL/Sakila** para explorar os conceitos de maneira prática.
-
-Entre as tecnologias mostradas estão:
-
-  Tecnologia            Papel
-  --------------------- ---------------------------------------
-  **Streamlit**         Interface web
-  **Python**            Linguagem principal
-  **MySQL**             Sistema gerenciador de banco de dados
-  **Sakila**            Banco de exemplo
-  **SQL**               Consultas e manipulação de dados
-  **mysql-connector**   Comunicação Python ↔ MySQL
-  **Plotly / Pandas**   Análise e visualização
-  **pytest**            Testes automatizados
-
-Essa combinação permite trabalhar:
-
--   interfaces;
--   banco de dados;
--   consultas;
--   CRUD;
--   visualizações;
--   testes;
--   organização do projeto.
-
-------------------------------------------------------------------------
-
-# 🧭 C4 aplicado à aplicação Streamlit + MySQL
-
-A arquitetura apresentada na aula também é representada pelos níveis do
-C4.
-
-## Contexto
-
-``` text
-USUÁRIO
-   ↓
-STREAMLIT APP
-   ↕
-MYSQL / SAKILA
-```
-
-## Contêineres
-
-``` text
-NAVEGADOR
-    ↓
-STREAMLIT
-    ↓
-SERVIÇOS PYTHON
-    ↓
-ACESSO A DADOS
-    ↓
-MYSQL
-```
-
-## Componentes
-
-``` text
-STREAMLIT
-├── UI / componentes
-├── tabelas e gráficos
-├── formulários
-├── navegação
-└── sessão
-
-SERVIÇOS
-├── queries.py
-└── database.py
-
-MYSQL / SAKILA
-├── tabelas
-├── views
-├── procedures
-├── functions
-└── triggers
-```
-
-## Código
-
-A estrutura do projeto é refinada até arquivos, módulos, páginas e
-testes.
-
-Isso demonstra, na prática, a ideia central do C4:
-
-> **A mesma solução pode ser observada em diferentes níveis de
-> detalhe.**
-
-------------------------------------------------------------------------
-
-# 🔄 Fluxo de dados da solução didática
-
-O fluxo apresentado pode ser resumido assim:
-
-``` text
-USUÁRIO
-   ↓
-NAVEGADOR
-   ↓
-STREAMLIT
-   ↓
-SERVIÇOS
-   ↓
-MYSQL / SAKILA
-   ↓
-RESULTADOS
-   ↓
-TABELAS / GRÁFICOS
-```
-
-Essa visão será importante nas próximas aulas, quando cada parte começar
-a ser implementada e evoluída.
-
-------------------------------------------------------------------------
-
-# 🧠 O que aprendemos nesta aula?
-
-A Aula 02 consolidou os seguintes conceitos:
-
-1.  **Projeto de Software** --- planejar antes de codificar;
-2.  **Requisitos × Projeto** --- problema versus solução;
-3.  **Arquitetura** --- decisões estruturais do sistema;
-4.  **Modelagem** --- representar a solução antes de construir;
-5.  **Tipos de projeto** --- arquitetura, dados, interfaces, componentes
-    e algoritmos;
-6.  **Abstração** --- mostrar somente o nível de detalhe necessário;
-7.  **Refinamento** --- aumentar progressivamente os detalhes;
-8.  **Modularidade** --- separar responsabilidades;
-9.  **Padrões de Projeto** --- soluções recorrentes para problemas
-    conhecidos;
-10. **Qualidade da Arquitetura** --- facilitar manutenção e evolução;
-11. **C4 Model** --- comunicar arquitetura em quatro níveis;
-12. **Estudo de Caso** --- Sistema de Gestão de Chamados;
-13. **Tecnologias do laboratório** --- Python, Streamlit, MySQL, Sakila,
-    SQL, Pandas/Plotly e pytest.
-
-------------------------------------------------------------------------
-
-# 🔗 Como os conceitos se conectam
-
-``` text
-REQUISITOS
-    ↓
-PROJETO
-    ↓
-MODELAGEM
+PROJETO DE SOFTWARE
     ↓
 ARQUITETURA
     ↓
-ABSTRAÇÃO
+INTERFACE
     ↓
-REFINAMENTO
-    ↓
-MODULARIDADE
-    ↓
-PADRÕES
-    ↓
-C4 MODEL
+DADOS
     ↓
 IMPLEMENTAÇÃO
 ```
 
-Não são assuntos isolados.
-
-Todos ajudam a responder uma pergunta central:
-
-> **Como transformar uma necessidade em uma solução de software
-> organizada e preparada para evoluir?**
+O projeto funciona como uma ponte entre a necessidade do usuário e o
+código que será desenvolvido.
 
 ------------------------------------------------------------------------
 
-# 🚀 Preparação para as próximas aulas
+# 1. Do requisito ao projeto
 
-A Aula 02 constrói a fundação conceitual para o projeto que será
-desenvolvido ao longo da disciplina.
+Requisitos descrevem aquilo que o sistema precisa atender.
 
-A partir daqui, o foco começa a avançar do projeto para a implementação:
+O projeto de software começa a transformar essas necessidades em uma
+solução técnica.
 
 ``` text
-AULA 01
-Engenharia de Software
-       ↓
-AULA 02
-Projeto + Arquitetura
-       ↓
-MODELAGEM
-       ↓
-C4 MODEL
-       ↓
-ORGANIZAÇÃO DO PROJETO
-       ↓
-PYTHON
-       ↓
-INTERFACE
-       ↓
-BANCO DE DADOS
-       ↓
-API
-       ↓
-TESTES
-       ↓
-EVOLUÇÃO DO SISTEMA
+O QUE O SISTEMA PRECISA FAZER?
+              ↓
+           REQUISITO
+              ↓
+COMO VAMOS ORGANIZAR A SOLUÇÃO?
+              ↓
+            PROJETO
 ```
 
-O estudo de caso apresentado nesta aula será a referência para conectar
-teoria e prática ao longo da disciplina.
+Essa etapa reduz improvisações durante a implementação e ajuda a equipe
+a construir uma visão compartilhada do sistema.
 
 ------------------------------------------------------------------------
 
-# 🏁 Resumo final
+# 2. O que é Projeto de Software?
 
-Nesta aula aprendemos que um software de qualidade não começa no editor
-de código.
+Projeto de software é o processo de definir como o sistema será
+estruturado para atender aos requisitos.
 
-Ele começa com decisões.
+Entre as decisões de projeto estão:
+
+-   arquitetura;
+-   componentes;
+-   responsabilidades;
+-   interface;
+-   dados;
+-   relacionamentos;
+-   tecnologias;
+-   fluxo de navegação;
+-   integração entre partes do sistema.
+
+O projeto não é o código final.
+
+Ele orienta a construção do código.
+
+------------------------------------------------------------------------
+
+# 3. Por que projetar antes de implementar?
+
+Começar diretamente pelo código pode parecer mais rápido, mas aumenta o
+risco de:
+
+-   responsabilidades misturadas;
+-   retrabalho;
+-   dificuldade de manutenção;
+-   inconsistências;
+-   decisões técnicas improvisadas;
+-   componentes fortemente acoplados;
+-   dificuldade de testar;
+-   dificuldade de evoluir.
+
+O projeto permite antecipar parte dessas decisões.
 
 ``` text
-ENTENDER
+SEM PROJETO
+
+REQUISITO
    ↓
-PLANEJAR
+CÓDIGO
    ↓
-MODELAR
+AJUSTES
    ↓
+RETRABALHO
+```
+
+``` text
+COM PROJETO
+
+REQUISITO
+   ↓
+ANÁLISE
+   ↓
+ARQUITETURA
+   ↓
+IMPLEMENTAÇÃO
+```
+
+------------------------------------------------------------------------
+
+# 4. O TechPort como estudo de caso
+
+Durante a disciplina, utilizamos o **TechPort --- Sistema de Gestão de
+Chamados** para aplicar os conceitos.
+
+O domínio permite trabalhar elementos como:
+
+``` text
+USUÁRIO
+TÉCNICO
+ADMINISTRADOR
+CHAMADO
+PRIORIDADE
+STATUS
+COMENTÁRIO
+HISTÓRICO
+ANEXO
+```
+
+O desafio do projeto é transformar esses elementos em uma aplicação
+organizada.
+
+------------------------------------------------------------------------
+
+# 5. Atores do sistema
+
+Os atores representam quem interage com o software.
+
+No TechPort, podemos observar diferentes perfis:
+
+``` text
+USUÁRIO
+   ↓
+Abre e acompanha chamados
+
+TÉCNICO
+   ↓
+Atende e atualiza chamados
+
+ADMINISTRADOR
+   ↓
+Administra e acompanha o sistema
+```
+
+Cada ator possui objetivos e responsabilidades diferentes.
+
+Essa distinção influencia requisitos, casos de uso, telas e regras da
+aplicação.
+
+------------------------------------------------------------------------
+
+# 6. Casos de uso
+
+Casos de uso ajudam a representar funcionalidades do ponto de vista de
+quem utiliza o sistema.
+
+Exemplos no domínio do TechPort:
+
+``` text
+USUÁRIO
+ ├── Abrir chamado
+ ├── Consultar chamado
+ └── Acompanhar andamento
+
+TÉCNICO
+ ├── Visualizar chamados
+ ├── Assumir chamado
+ └── Atualizar status
+
+ADMINISTRADOR
+ ├── Gerenciar informações
+ └── Acompanhar operação
+```
+
+Eles ajudam a conectar:
+
+``` text
+ATOR
+  ↓
+NECESSIDADE
+  ↓
+FUNCIONALIDADE
+```
+
+------------------------------------------------------------------------
+
+# 7. Requisitos funcionais e projeto
+
+Um requisito funcional descreve um comportamento esperado.
+
+Exemplo:
+
+> O usuário deve conseguir abrir um chamado.
+
+Durante o projeto, precisamos transformar essa necessidade em partes
+concretas:
+
+``` text
+REQUISITO
+“O usuário deve abrir um chamado”
+              ↓
+TELA / FORMULÁRIO
+              ↓
+VALIDAÇÃO
+              ↓
+REGRA
+              ↓
+PERSISTÊNCIA
+              ↓
+CONFIRMAÇÃO
+```
+
+O projeto detalha como a funcionalidade poderá existir tecnicamente.
+
+------------------------------------------------------------------------
+
+# 8. Requisitos não funcionais
+
+Nem todos os requisitos descrevem funcionalidades.
+
+Também precisamos considerar características de qualidade, como:
+
+-   segurança;
+-   desempenho;
+-   usabilidade;
+-   confiabilidade;
+-   manutenibilidade;
+-   disponibilidade.
+
+Exemplo:
+
+``` text
+FUNCIONAL
+“O usuário pode abrir um chamado.”
+
+NÃO FUNCIONAL
+“O sistema deve proteger os dados do usuário.”
+```
+
+Essas características também influenciam decisões arquiteturais.
+
+------------------------------------------------------------------------
+
+# 9. Arquitetura de software
+
+Arquitetura descreve a organização de alto nível da solução.
+
+Ela ajuda a responder:
+
+``` text
+QUAIS PARTES EXISTEM?
+COMO ELAS SE RELACIONAM?
+QUAL É A RESPONSABILIDADE DE CADA PARTE?
+COMO OS DADOS CIRCULAM?
+```
+
+Uma representação inicial pode ser:
+
+``` text
+USUÁRIO
+   ↓
+INTERFACE
+   ↓
+APLICAÇÃO
+   ↓
+DADOS
+```
+
+A arquitetura cria uma visão estrutural antes de entrarmos nos detalhes
+do código.
+
+------------------------------------------------------------------------
+
+# 10. Separação de responsabilidades
+
+Uma das ideias centrais da aula é evitar que uma única parte do sistema
+seja responsável por tudo.
+
+Podemos separar responsabilidades:
+
+``` text
+INTERFACE
+   ↓
+Interação com usuário
+
+LÓGICA
+   ↓
+Regras da aplicação
+
+DADOS
+   ↓
+Persistência
+```
+
+Essa separação favorece:
+
+-   manutenção;
+-   organização;
+-   testes;
+-   reutilização;
+-   evolução.
+
+------------------------------------------------------------------------
+
+# 11. Componentes
+
+Um sistema pode ser dividido em componentes com responsabilidades
+específicas.
+
+Exemplo conceitual para o TechPort:
+
+``` text
+GESTÃO DE USUÁRIOS
+GESTÃO DE CHAMADOS
+GESTÃO DE TÉCNICOS
+CONTROLE DE STATUS
+HISTÓRICO
+RELATÓRIOS
+```
+
+Cada componente deve ter um propósito compreensível.
+
+A divisão deve ajudar a solução, e não criar complexidade desnecessária.
+
+------------------------------------------------------------------------
+
+# 12. Coesão
+
+**Coesão** está relacionada ao quanto os elementos de um componente
+pertencem ao mesmo propósito.
+
+Uma boa organização busca:
+
+``` text
+COMPONENTE
+    ↓
+RESPONSABILIDADES RELACIONADAS
+```
+
+Exemplo:
+
+``` text
+Chamados
+ ├── criar chamado
+ ├── consultar chamado
+ └── atualizar chamado
+```
+
+Quanto mais coerentes forem as responsabilidades internas, mais fácil
+será compreender e manter o componente.
+
+------------------------------------------------------------------------
+
+# 13. Acoplamento
+
+**Acoplamento** representa o nível de dependência entre partes do
+sistema.
+
+Quando tudo depende diretamente de tudo:
+
+``` text
+A ↔ B ↔ C ↔ D
+```
+
+uma alteração pode produzir impactos difíceis de prever.
+
+O projeto procura criar relações mais controladas:
+
+``` text
+A → B → C
+```
+
+O objetivo não é eliminar todas as dependências, mas torná-las claras e
+administráveis.
+
+------------------------------------------------------------------------
+
+# 14. Interface do sistema
+
+Projeto de software também envolve pensar na experiência do usuário.
+
+A interface precisa refletir as tarefas que cada ator executará.
+
+No TechPort:
+
+``` text
+USUÁRIO
+   ↓
+ABRIR / ACOMPANHAR CHAMADOS
+
+TÉCNICO
+   ↓
+ATENDER / ATUALIZAR CHAMADOS
+
+ADMIN
+   ↓
+ADMINISTRAR / INSPECIONAR
+```
+
+A tela não deve ser pensada isoladamente das regras e dos dados.
+
+------------------------------------------------------------------------
+
+# 15. Protótipos
+
+Antes de implementar uma interface completa, podemos utilizar protótipos
+para validar ideias.
+
+Um protótipo ajuda a discutir:
+
+-   disposição das informações;
+-   navegação;
+-   ações disponíveis;
+-   fluxo do usuário;
+-   entendimento das telas.
+
+``` text
+IDEIA
+  ↓
+PROTÓTIPO
+  ↓
+VALIDAÇÃO
+  ↓
+AJUSTES
+  ↓
+IMPLEMENTAÇÃO
+```
+
+Alterar um protótipo normalmente custa menos do que reconstruir uma
+funcionalidade já implementada.
+
+------------------------------------------------------------------------
+
+# 16. Fluxo de navegação
+
+O projeto precisa considerar como o usuário percorre a aplicação.
+
+Exemplo:
+
+``` text
+LOGIN
+  ↓
+PAINEL
+  ↓
+CHAMADOS
+  ↓
+DETALHE
+  ↓
+AÇÃO
+  ↓
+CONFIRMAÇÃO
+```
+
+Um fluxo claro ajuda a reduzir dúvidas e ações desnecessárias.
+
+------------------------------------------------------------------------
+
+# 17. Projeto de dados
+
+Além das telas, precisamos pensar nas informações que sustentam o
+sistema.
+
+Perguntas importantes:
+
+``` text
+Quais dados precisam ser armazenados?
+Quais entidades existem?
+Como elas se relacionam?
+Quais informações são obrigatórias?
+Como preservar consistência?
+```
+
+No TechPort, entidades podem incluir:
+
+``` text
+USUÁRIO
+TÉCNICO
+CHAMADO
+COMENTÁRIO
+HISTÓRICO
+ANEXO
+```
+
+------------------------------------------------------------------------
+
+# 18. Entidades e relacionamentos
+
+As entidades representam elementos relevantes do domínio.
+
+Relacionamentos representam como esses elementos se conectam.
+
+Exemplo conceitual:
+
+``` text
+USUÁRIO
+   │
+   │ abre
+   ▼
+CHAMADO
+   │
+   │ atendido por
+   ▼
+TÉCNICO
+```
+
+Outro exemplo:
+
+``` text
+CHAMADO
+   ├── COMENTÁRIOS
+   ├── HISTÓRICO
+   └── ANEXOS
+```
+
+Essa visão prepara o projeto para a modelagem do banco de dados.
+
+------------------------------------------------------------------------
+
+# 19. Cardinalidade
+
+Ao modelar dados, também precisamos compreender quantos registros podem
+se relacionar.
+
+Exemplo:
+
+``` text
+1 USUÁRIO
+    ↓
+N CHAMADOS
+```
+
+Um usuário pode abrir vários chamados.
+
+``` text
+1 CHAMADO
+    ↓
+N COMENTÁRIOS
+```
+
+Um chamado pode possuir vários comentários.
+
+A cardinalidade ajuda a transformar regras do domínio em estrutura de
+dados.
+
+------------------------------------------------------------------------
+
+# 20. Chaves
+
+No projeto de dados, chaves ajudam a identificar e relacionar registros.
+
+``` text
+CHAVE PRIMÁRIA
+      ↓
+Identifica um registro
+
+CHAVE ESTRANGEIRA
+      ↓
+Relaciona tabelas
+```
+
+Exemplo:
+
+``` text
+usuarios
+id  ← PK
+
+chamados
+id
+usuario_id ← FK para usuarios.id
+```
+
+Esses conceitos serão importantes quando o banco do TechPort for
+construído.
+
+------------------------------------------------------------------------
+
+# 21. Da arquitetura para o código
+
+As decisões de projeto começam a orientar a estrutura da implementação.
+
+``` text
+ARQUITETURA
+    ↓
+COMPONENTES
+    ↓
+MÓDULOS
+    ↓
+FUNÇÕES / CLASSES
+    ↓
+CÓDIGO
+```
+
+O objetivo é que o código reflita a organização pensada durante o
+projeto.
+
+------------------------------------------------------------------------
+
+# 22. Organização do projeto
+
+Uma estrutura de diretórios pode ajudar a representar responsabilidades.
+
+Exemplo conceitual:
+
+``` text
+techport/
+├── app/
+│   ├── pages/
+│   ├── models/
+│   ├── services/
+│   ├── repositories/
+│   └── database/
+├── tests/
+├── requirements.txt
+└── README.md
+```
+
+Nesta fase, o mais importante é compreender por que cada
+responsabilidade precisa ter um lugar definido.
+
+------------------------------------------------------------------------
+
+# 23. Escolha de tecnologias
+
+Projeto também envolve decisões tecnológicas.
+
+No TechPort, a evolução da disciplina utiliza tecnologias como:
+
+``` text
+PYTHON
+STREAMLIT
+MYSQL
+FASTAPI
+PYTEST
+GIT
+DOCKER
+```
+
+A tecnologia deve ser escolhida para atender às necessidades da solução.
+
+> Tecnologia é meio, não objetivo.
+
+------------------------------------------------------------------------
+
+# 24. Decisões arquiteturais
+
+Uma decisão técnica deve possuir uma justificativa.
+
+Exemplo:
+
+``` text
+DECISÃO
+Usar banco relacional
+       ↓
+MOTIVO
+Dados estruturados e relacionamentos claros
+```
+
+Outro exemplo:
+
+``` text
+DECISÃO
+Separar interface e persistência
+       ↓
+MOTIVO
+Melhor organização e evolução
+```
+
+Registrar decisões ajuda a equipe a compreender por que o sistema foi
+construído de determinada maneira.
+
+------------------------------------------------------------------------
+
+# 25. Diagramas como comunicação
+
+Diagramas ajudam a explicar o sistema antes e durante a implementação.
+
+Eles podem representar:
+
+-   atores;
+-   funcionalidades;
+-   componentes;
+-   fluxo;
+-   dados;
+-   relacionamentos;
+-   arquitetura.
+
+O objetivo não é desenhar por desenhar.
+
+> **O diagrama deve tornar uma decisão ou estrutura mais fácil de
+> compreender.**
+
+------------------------------------------------------------------------
+
+# 26. Do requisito à solução
+
+Uma funcionalidade pode percorrer várias etapas:
+
+``` text
+NECESSIDADE DO USUÁRIO
+        ↓
+REQUISITO
+        ↓
+CASO DE USO
+        ↓
+TELA
+        ↓
+REGRA
+        ↓
+DADO
+        ↓
+COMPONENTE
+        ↓
+IMPLEMENTAÇÃO
+```
+
+Essa visão ajuda a compreender que as etapas do desenvolvimento estão
+conectadas.
+
+------------------------------------------------------------------------
+
+# 27. Projeto não é uma etapa isolada
+
+Mesmo depois que a implementação começa, o projeto pode evoluir.
+
+``` text
 PROJETAR
-   ↓
-ORGANIZAR
    ↓
 IMPLEMENTAR
    ↓
-TESTAR
+VALIDAR
    ↓
-EVOLUIR
+APRENDER
+   ↓
+AJUSTAR O PROJETO
 ```
 
-Antes de criar classes, APIs, telas ou bancos de dados, precisamos
-compreender **como essas partes formarão uma solução coerente**.
+Novas informações podem exigir mudanças.
 
-> **Um bom software nasce de um bom projeto e evolui com uma boa
-> arquitetura.**
+O importante é manter coerência entre requisitos, arquitetura e
+implementação.
 
 ------------------------------------------------------------------------
 
-# 🎓 Mensagem da Aula 02
+# 28. Preparando o TechPort para as próximas aulas
+
+A Aula 02 estabelece a base para as próximas construções.
 
 ``` text
-REQUISITOS dizem O QUE precisamos.
-
-PROJETO define COMO faremos.
-
-ARQUITETURA organiza AS PARTES.
-
-MODELAGEM permite ENXERGAR.
-
-C4 permite COMUNICAR.
-
-MODULARIDADE permite EVOLUIR.
-
-IMPLEMENTAÇÃO transforma tudo isso em SOFTWARE.
+AULA 01
+Requisitos e visão do sistema
+        ↓
+AULA 02
+Projeto e arquitetura
+        ↓
+PRÓXIMAS AULAS
+Código + Dados + API + Testes + Deploy
 ```
 
-> **Planeje bem. Construa melhor.**
+A partir dessa estrutura, o projeto poderá evoluir progressivamente sem
+perder a visão do todo.
 
 ------------------------------------------------------------------------
 
-## 👨‍🏫 Professor
+# 29. Principais aprendizados
 
-**Professor Rodolfo Terra**\
-**Disciplina: Projeto, Implementação e Teste de Software**
+Ao final desta aula, devemos compreender que:
 
-🔗 LinkedIn: https://www.linkedin.com/in/rodolffoterra/\
-🔗 GitHub: https://github.com/rodolffoterra
+-   requisitos dizem **o que** o sistema precisa atender;
+-   projeto ajuda a definir **como** a solução será estruturada;
+-   arquitetura organiza os principais elementos do sistema;
+-   componentes devem possuir responsabilidades claras;
+-   coesão e acoplamento influenciam a manutenibilidade;
+-   interface deve refletir as necessidades dos atores;
+-   protótipos permitem validar ideias antes da implementação;
+-   fluxos ajudam a compreender a jornada do usuário;
+-   projeto de dados identifica entidades e relacionamentos;
+-   cardinalidade representa regras importantes do domínio;
+-   decisões técnicas precisam ser justificadas;
+-   diagramas são instrumentos de comunicação;
+-   projeto e implementação evoluem juntos.
+
+------------------------------------------------------------------------
+
+# Tecnologias e conceitos relacionados
+
+  Item                     Papel
+  ------------------------ ---------------------------------------------
+  **Requisitos**           Definem necessidades e comportamentos
+  **Casos de uso**         Representam interações dos atores
+  **Arquitetura**          Organiza a solução
+  **Componentes**          Dividem responsabilidades
+  **Protótipos**           Validam interface e fluxo
+  **Modelagem de dados**   Estrutura informações
+  **Cardinalidade**        Define relações entre entidades
+  **Python**               Base de implementação do projeto
+  **Streamlit**            Interface utilizada na evolução do TechPort
+  **MySQL**                Persistência utilizada posteriormente
+  **Git**                  Versionamento e colaboração
+
+------------------------------------------------------------------------
+
+# Conclusão
+
+A principal transformação da Aula 02 é sair de:
+
+``` text
+“EU SEI O QUE O SISTEMA PRECISA FAZER.”
+```
+
+para:
+
+``` text
+“EU CONSIGO COMEÇAR A DESENHAR COMO ELE SERÁ CONSTRUÍDO.”
+```
+
+O fluxo pode ser resumido em:
+
+``` text
+REQUISITO
+    ↓
+PROJETO
+    ↓
+ARQUITETURA
+    ↓
+COMPONENTES
+    ↓
+DADOS
+    ↓
+INTERFACE
+    ↓
+IMPLEMENTAÇÃO
+```
+
+> **Projetar software é transformar necessidades em decisões técnicas
+> compreensíveis antes que essas decisões se tornem código.**
+
+------------------------------------------------------------------------
+
+## Professor
+
+**Professor Rodolfo Terra**
+
+-   [LinkedIn ---
+    linkedin.com/in/rodolffoterra/](https://www.linkedin.com/in/rodolffoterra/)
+-   [GitHub ---
+    github.com/rodolffoterra](https://github.com/rodolffoterra)
+
+------------------------------------------------------------------------
+
+**Projeto, Implementação e Teste de Software**\
+**TechPort --- Sistema de Gestão de Chamados**
+
+`Requisitos → Projeto → Arquitetura → Implementação`
