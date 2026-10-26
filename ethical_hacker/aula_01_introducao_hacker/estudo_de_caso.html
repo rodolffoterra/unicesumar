@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aula 01 | Estudo de Caso — Ethical Hacker</title>
+
+<style>
+:root {
+  --blue: #075bb8;
+  --navy: #09245b;
+  --cyan: #09aeea;
+  --bg: #f3f7fc;
+  --ink: #1a2b46;
+  --green: #087747;
+  --red: #b42332;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.65 "Segoe UI", Arial, sans-serif;
+}
+
+.banner {
+  background: linear-gradient(120deg, #073a85, #0875d1);
+  color: white;
+  padding: 28px max(24px, calc((100vw - 1080px)/2));
+}
+
+.brand {
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+}
+
+.banner h1 {
+  font-size: clamp(28px, 4vw, 43px);
+  line-height: 1.2;
+  margin: 22px 0 8px;
+}
+
+.banner p {
+  margin: 0;
+  color: #e1f3ff;
+}
+
+.meta {
+  display: flex;
+  gap: 12px 30px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  font-size: 14px;
+}
+
+.meta a {
+  color: white;
+  text-decoration: none;
+  border-bottom: 1px solid #9cdcff;
+}
+
+.meta a:hover { text-decoration: underline; }
+
+main {
+  max-width: 1080px;
+  margin: auto;
+  padding: 32px 22px 60px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 27px 30px;
+  margin: 0 0 22px;
+  box-shadow: 0 5px 20px #133b6910;
+  border: 1px solid #e1e9f4;
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1.3px;
+}
+
+h2 {
+  color: var(--navy);
+  font-size: 24px;
+  margin: 4px 0 14px;
+}
+
+h3 {
+  color: var(--navy);
+  font-size: 18px;
+  margin: 22px 0 8px;
+}
+
+p { margin: 9px 0; }
+
+ul, ol { padding-left: 23px; }
+
+.concepts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.concept {
+  background: #f1f7ff;
+  border-left: 4px solid var(--blue);
+  padding: 15px;
+  border-radius: 9px;
+}
+
+.concept strong {
+  display: block;
+  color: var(--navy);
+}
+
+.scenario {
+  border-left: 5px solid #e59d19;
+  background: #fff9eb;
+  padding: 18px 22px;
+  border-radius: 8px;
+}
+
+.question {
+  background: #eaf5ff;
+  border-left: 5px solid var(--cyan);
+  padding: 17px 22px;
+  border-radius: 9px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.solution {
+  background: #f1fbf5;
+  border-left: 5px solid var(--green);
+  padding: 18px 22px;
+  border-radius: 9px;
+}
+
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e0e8f1;
+  vertical-align: top;
+}
+
+th {
+  background: #edf5ff;
+  color: var(--navy);
+}
+
+.reflection {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.takeaway {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 13px;
+  padding: 23px 26px;
+  font-weight: 600;
+  font-size: 19px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #50637b;
+  font-size: 13px;
+}
+
+footer a { color: var(--blue); }
+
+@media (max-width: 700px) {
+  .concepts { grid-template-columns: 1fr; }
+  .card { padding: 22px 19px; }
+  .banner { padding: 25px 22px; }
+}
+
+@media print {
+  body { background: white; }
+  .banner {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  main { padding: 18px; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="banner">
+  <div class="brand">UniCesumar</div>
+  <h1>Aula 01 — Estudo de Caso</h1>
+  <p>O relatório que ninguém quer receber</p>
+
+  <div class="meta">
+    <span><strong>Disciplina:</strong> Ethical Hacker</span>
+    <span><strong>Professor:</strong> Rodolfo Terra</span>
+    <span>
+      <strong>LinkedIn:</strong>
+      <a href="https://www.linkedin.com/in/rodolffoterra/"
+         target="_blank" rel="noopener noreferrer">
+        /in/rodolffoterra/
+      </a>
+    </span>
+    <span>
+      <strong>GitHub:</strong>
+      <a href="https://github.com/rodolffoterra"
+         target="_blank" rel="noopener noreferrer">
+        github.com/rodolffoterra
+      </a>
+    </span>
+  </div>
+</header>
+
+<main>
+
+<section class="card">
+  <div class="eyebrow">01 · Contextualização</div>
+  <h2>Conceitos fundamentais</h2>
+
+  <p>
+    O <strong>Ethical Hacker</strong> utiliza conhecimentos e
+    técnicas de segurança para identificar riscos e apoiar a
+    proteção de sistemas, sempre com autorização e dentro dos
+    limites estabelecidos.
+  </p>
+
+  <div class="concepts">
+    <div class="concept">
+      <strong>Autorização e escopo</strong>
+      Definem quais atividades, sistemas e procedimentos são permitidos.
+    </div>
+    <div class="concept">
+      <strong>Integridade e documentação</strong>
+      Exigem registros fiéis dos achados, evidências e recomendações.
+    </div>
+    <div class="concept">
+      <strong>Ética e confidencialidade</strong>
+      Orientam a comunicação responsável e o tratamento reservado
+      dos resultados.
+    </div>
+  </div>
+
+  <p>
+    O relatório de Pentest deve apresentar os problemas identificados,
+    seus impactos e as recomendações de correção. Seu propósito é
+    <strong>reduzir riscos, não procurar culpados</strong>.
+  </p>
+</section>
+
+<section class="card">
+  <div class="eyebrow">02 · Situação-problema</div>
+  <h2>Estudo de caso — O relatório que ninguém quer receber</h2>
+
+  <div class="scenario">
+    <p>
+      Um hacker ético identifica <strong>vulnerabilidades graves</strong>
+      durante um <strong>Pentest autorizado</strong> em uma empresa fictícia.
+    </p>
+    <p>
+      Ao receber os resultados, o gerente de TI solicita que algumas
+      dessas vulnerabilidades sejam <strong>omitidas do relatório</strong>
+      para evitar problemas com a diretoria.
+    </p>
+  </div>
+
+  <h3>Questão central do estudo</h3>
+
+  <div class="question">
+    Qual deve ser a postura do profissional diante dessa solicitação?
+  </div>
+
+  <p>
+    Considere a ética profissional, a fidelidade das evidências,
+    a confidencialidade e as obrigações previstas no contrato.
+  </p>
+</section>
+
+<section class="card">
+  <div class="eyebrow">03 · Análise do dilema ético</div>
+  <h2>O que está em jogo nessa decisão?</h2>
+
+  <p>
+    O pedido do gerente coloca em conflito a conveniência administrativa
+    e o dever profissional de apresentar resultados confiáveis.
+    Antes de avaliar a conduta, considere os aspectos envolvidos:
+  </p>
+
+  <div class="concepts">
+    <div class="concept">
+      <strong>Integridade do relatório</strong>
+      O documento precisa representar fielmente as vulnerabilidades
+      e as evidências obtidas.
+    </div>
+
+    <div class="concept">
+      <strong>Proteção da organização</strong>
+      Omitir riscos relevantes pode impedir decisões de correção
+      e aumentar a exposição a incidentes.
+    </div>
+
+    <div class="concept">
+      <strong>Comunicação responsável</strong>
+      Os achados devem ser encaminhados aos destinatários autorizados,
+      conforme contrato e procedimentos de escalonamento.
+    </div>
+  </div>
+
+  <h3>Questões para análise</h3>
+
+  <ul>
+    <li>
+      O pedido do gerente justifica retirar vulnerabilidades graves
+      do relatório?
+    </li>
+    <li>
+      Qual é a diferença entre manter um achado confidencial e
+      ocultá-lo dos responsáveis pela decisão?
+    </li>
+    <li>
+      Como registrar e comunicar a discordância de forma ética
+      e profissional?
+    </li>
+  </ul>
+</section>
+
+<section class="card">
+  <div class="eyebrow">04 · Resolução comentada</div>
+  <h2>Proposta de resposta esperada</h2>
+
+  <div class="solution">
+    <p>
+      O Ethical Hacker deve <strong>manter uma postura ética,
+      profissional e imparcial, recusando-se a omitir vulnerabilidades
+      relevantes</strong> do relatório.
+    </p>
+
+    <p>
+      Deve documentar os achados com clareza, apresentar evidências,
+      classificar os riscos e recomendar medidas corretivas,
+      independentemente do desconforto que os resultados possam
+      causar à gestão.
+    </p>
+
+    <p>
+      A comunicação deve ocorrer
+      <strong>pelos canais autorizados e previstos no contrato</strong>,
+      preservando a confidencialidade. Se necessário, o profissional
+      deve seguir os procedimentos formais de escalonamento.
+    </p>
+
+    <p>
+      <strong>
+        O objetivo não é proteger a imagem de um gestor ou procurar
+        culpados, mas contribuir para a segurança da organização.
+      </strong>
+    </p>
+  </div>
+
+  <h3>Critérios de avaliação da resposta</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th>O que se espera do aluno</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><strong>Ética profissional</strong></td>
+          <td>Não aceitar a omissão de vulnerabilidades relevantes.</td>
+        </tr>
+        <tr>
+          <td><strong>Integridade</strong></td>
+          <td>Preservar a veracidade e a completude do relatório.</td>
+        </tr>
+        <tr>
+          <td><strong>Responsabilidade</strong></td>
+          <td>Documentar riscos e recomendar correções.</td>
+        </tr>
+        <tr>
+          <td><strong>Confidencialidade</strong></td>
+          <td>Compartilhar os resultados apenas com pessoas autorizadas.</td>
+        </tr>
+        <tr>
+          <td><strong>Conduta profissional</strong></td>
+          <td>
+            Seguir o contrato e os procedimentos de comunicação
+            e escalonamento.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <div class="eyebrow">05 · Reflexão final</div>
+  <h2>Consequências da omissão</h2>
+
+  <p class="reflection">
+    Se o Ethical Hacker omitir uma vulnerabilidade grave e,
+    posteriormente, a empresa sofrer um ataque explorando essa falha,
+    quais poderão ser as consequências para a organização e para
+    a credibilidade do profissional?
+  </p>
+
+  <p>
+    <strong>Para a organização:</strong>
+    aumento da exposição a incidentes, perdas financeiras,
+    interrupções operacionais e danos reputacionais.
+  </p>
+
+  <p>
+    <strong>Para o profissional:</strong>
+    perda de confiança e credibilidade, além de possíveis consequências
+    contratuais e profissionais, conforme as circunstâncias.
+  </p>
+</section>
+
+<div class="takeaway">
+  Mensagem principal: a responsabilidade do Ethical Hacker é
+  identificar e comunicar os riscos com transparência, e não
+  esconder problemas para evitar conflitos internos.
+</div>
+
+</main>
+
+<footer>
+  UniCesumar · Disciplina Ethical Hacker · Professor Rodolfo Terra
+  <p>
+    <a href="https://www.linkedin.com/in/rodolffoterra/">
+      LinkedIn
+    </a>
+    ·
+    <a href="https://github.com/rodolffoterra">
+      GitHub
+    </a>
+  </p>
+</footer>
+
+</body>
+</html>
