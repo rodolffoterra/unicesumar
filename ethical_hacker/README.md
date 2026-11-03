@@ -49,10 +49,10 @@ Ao longo da disciplina, espera-se que o estudante seja capaz de:
 
 | Aula | Gravação no YouTube |
 |:---:|---|
-| **Aula 01** | *Link a inserir* |
-| **Aula 02** | *Link a inserir* |
-| **Aula 03** | *Link a inserir* |
-| **Aula 04** | *Link a inserir* |
+| **Aula 01** | *https://www.youtube.com/watch?v=gIXLP-rDAaM* |
+| **Aula 02** | *https://www.youtube.com/watch?v=Ed_8jx943Po* |
+| **Aula 03** | *https://www.youtube.com/watch?v=-4-FD3muck8* |
+| **Aula 04** | *https://www.youtube.com/watch?v=x2AL0Q60XlQ* |
 
 <!--
 Para atualizar esta tabela, substitua *Link a inserir* por:
