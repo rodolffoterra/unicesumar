@@ -10,7 +10,7 @@
 
 ## 📺 Gravação da aula
 
-**YouTube — Aula 02:** *Link a inserir após a publicação.*
+**YouTube — Aula 02:** *https://www.youtube.com/watch?v=Ed_8jx943Po*
 
 ## 🎯 Objetivos de aprendizagem
 
@@ -224,8 +224,8 @@ Base de sustentação: PESSOAS + PROCESSOS + TECNOLOGIA
 ## 📚 Materiais e referências
 
 - **Livro da disciplina Ethical Hacker:** disponível no ambiente virtual de aprendizagem da UniCesumar.
-- **Slides da Aula 02:** *link a inserir quando publicados no repositório*.
-- **Vídeo da Aula 02:** *link do YouTube a inserir*.
+- **Slides da Aula 02:** *https://github.com/rodolffoterra/unicesumar/blob/main/ethical_hacker/aula_02_ameacas_ataques_fund_de_seg_cib/ethical_hacker_aula_02.pdf*.
+- **Vídeo da Aula 02:** *https://www.youtube.com/watch?v=Ed_8jx943Po*.
 - **NIST Cybersecurity Framework (CSF) 2.0:** https://www.nist.gov/cyberframework
 - **OWASP Top 10:** https://owasp.org/www-project-top-ten/
 - **CERT.br — Cartilha de Segurança para Internet:** https://cartilha.cert.br/
